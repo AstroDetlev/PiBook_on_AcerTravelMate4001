@@ -15,7 +15,7 @@ b) Use the existing keyboard matrix (german layout, 89 keys, curved)
   - Working: Temporary output of a detected key via UART (9k6) 
   - ToDo: debouncing/dead time for key repeat
   - ToDo: automatic key press acceleration
-  - ToDo: Integrate PS/2 Library for becoming a "homemmade PS/2 Keyboard" (Also: low/capital letter and all the Shift/Alt/Ctrl key stuff)
+  - ToDo: Integrate PS/2 Library for becoming a "homemade PS/2 Keyboard" (Also: low/capital letter and all the Shift/Alt/Ctrl key stuff)
   - ToDo: Glue logic for PS/2?
   - Todo: The 3 LEDs of a usual keyboard
   - 
