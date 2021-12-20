@@ -26,7 +26,7 @@ f) At least add a headphone jack. Reuse internal speakers if possible
 g) Use a new 12V Power supply so there's no need to deal with the old one
 
 h) If possible, lead the inputs of the screen adaption to the outside of the laptop, so it can be used as a monitor.
-    Do teh same for keyboard an dtouchpad.
+    Do the same for keyboard and touchpad.
 
 
 
