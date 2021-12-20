@@ -1,12 +1,12 @@
 # PiBook_on_AcerTravelMate4001
 A dead Acer Travelmate 4001WLMI may become alive again with a "Raspberry Pi heart" in it
 
-There ar eeasier wys to get a PiBook, but I want to figure it out how to do this.
+There are easier ways to get a PiBook, but I want to figure it out how to do this.
 My plan:
 
 a) If possible use the housing of the TravelMate. Maybe there is not enough space.
 
-b) Use the existing keyboard matrix (german layout, 89 keys)
+b) Use the existing keyboard matrix (german layout, 89 keys, curved)
   Using a bigger Arduino with many I/O to deal with 24 the pins.
   Currently in use is an full size Arduino Mega2560. Maybe a miniaturized version will be the final version.
   current state:
@@ -14,8 +14,9 @@ b) Use the existing keyboard matrix (german layout, 89 keys)
   - Working: Temporary output of a detected key via UART (9k6) 
   - ToDo: debouncing/dead time for key repeat
   - ToDo: automatic key press acceleration
-  - ToDo: Integrate PS" Library for becoming a "homemmade PS/2 Keyboard" (Also: low/capital letter and all the Shift/Alt/Ctrl key stuff)
-  - Todo: The 3 LEDs of a keybaord
+  - ToDo: Integrate PS/2 Library for becoming a "homemmade PS/2 Keyboard" (Also: low/capital letter and all the Shift/Alt/Ctrl key stuff)
+  - ToDo: Glue logic for PS/2?
+  - Todo: The 3 LEDs of a usual keyboard
 Details can be found in folder \keyboard
   
 c) Use the existing Touchpad (TM42PUF), PS/2 out
@@ -43,9 +44,12 @@ g) Use a new 12V Power supply so there's no need to deal with the old one that p
 h) If possible, lead the inputs of the screen accessing board to the outside of the laptop, so it can be used as a monitor.
     Do the same for keyboard and touchpad (USB or PS/2?)
 
-i) Temperatur and Voltage Monitoring and small extra Display (2x16 char?)
+i) Temperatur and Voltage Monitoring, Fan control and small extra Display (2x16 char?)
   Temperatur measuring via DS18S20 (I need to check that character between the numbers...)
-  Voltage...How often will I need this?
+  Fan control via PWM?
+  Voltage...How accurate can ADC be with an Arduino?
   Details can be found in folder \Measuring if the work is started
+
+j) How to power on/off the Rapberry Pi? Can the Keyboard-Arduino help with this task? 
 
 
