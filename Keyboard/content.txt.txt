@@ -1,0 +1,3 @@
+content.txt - the file you are reading now
+keyboard.ino  - Arduino sketch for th keyboard
+Keyboard_matrix.xlsx - The Keyboard map, as "beeped out" by hand.
