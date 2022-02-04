@@ -68,10 +68,10 @@
   Pin 52 on A.Mega2560 is PB1(SCK)
   Pin 53 on A.Mega2560 is PB0(SS)
 
-  Pin1 of the Marrix is connected with Pin 22 of the Arduino
-  Pin2 of the Marrix is connected with Pin 23 of the Arduino
+  Pin1 of the Matrix is connected with Pin 22 of the Arduino
+  Pin2 of the Matrix is connected with Pin 23 of the Arduino
   ...
-  Pin24 of the Marrix is connected with Pin 45 of the Arduino
+  Pin24 of the Matrix is connected with Pin 45 of the Arduino
 
 
   Usefull details for PS/2
@@ -127,33 +127,34 @@ void loop()
         out_tmp = out - LOWEST_PIN + 1;
         expected_key = int((Matrix[out_tmp - 1][in_tmp - 1])); //shift by 1 byte. The first entry is at [0][0]!
 
-        pinMode(in, INPUT_PULLUP);
-        delay(dly);
-        int newstate = digitalRead(in);
-        if (newstate == LOW)
-        {
-          //xx
+		if (expected_key != ID_KEY_UNKNOWN)
+		{
+			pinMode(in, INPUT_PULLUP);
+			delay(dly);
+			int newstate = digitalRead(in);
+			if (newstate == LOW)
+			{
+			  //xx
 
 
-          //strcpy_P(out, int((Matrix[out_tmp-1][in_tmp-1])));
+			  //strcpy_P(out, int((Matrix[out_tmp-1][in_tmp-1])));
 
-          if (out > 0)
-          {
-            // Serial.print(out_tmp);
-            // Serial.print(",");
-            // Serial.print(in_tmp);
-            // Serial.print(",");
-            //xx
-            Serial.println(HumanReadableDecoder[expected_key]);
-            delay(200);
-          }
+				// Serial.print(out_tmp);
+				// Serial.print(",");
+				// Serial.print(in_tmp);
+				// Serial.print(",");
+				//xx
+        
+        Serial.println(HumanReadableDecoder[expected_key]);
+        //Serial.print(expected_key);
+				delay(200);
 
 
-          //Serial.print("),\n");
+			  //Serial.print("),\n");
 
-        }
-        delay(dly);
-
+			}
+			delay(dly);
+		}
       }
       delay(dly);
     }
