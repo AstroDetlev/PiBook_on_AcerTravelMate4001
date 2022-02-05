@@ -83,84 +83,91 @@
 #include "ACER_TRAVELMATE4001WLMI_KEYBOARD_MATRIX.h"
 
 #define LOWEST_PIN 22
-#define HIGHEST_PIN LOWEST_PIN + 23  /* LOWEST_PIN itself is one pin, so there are 23 in addition*/
+#define HIGHEST_PIN LOWEST_PIN + 23  /* LOWEST_PIN itself is 1 pin, so there are 23 in addition*/
 #define DELAY_MS 0
 
+bool CurrentlyPressedKeys[90];
+bool PreviouslyPressedKeys[90];
 
 
 // the setup routine runs once when you press reset
 
 void setup() {
+
   // initialize serial communication at 9600 bits per second:
+  //This is the debug output.
   Serial.begin(9600);
 }
 
 // the loop routine runs over and over again forever:
 void loop()
 {
+  int i;
+  //backup the old data
+  i = 90;
+  while ( i-- ) *( PreviouslyPressedKeys + i ) = *( CurrentlyPressedKeys + i );
+  //get new data
+  DetectPressedKeys();
+  //delay(50);
+  for (i = 0; i < 90; i++)
+  {
+    if (PreviouslyPressedKeys[i] != CurrentlyPressedKeys[i])
+    {
+      //change detected
+      if (CurrentlyPressedKeys[i])
+      {
+        Serial.print("pressed: ");
+      }
+      else
+      {
+        Serial.print("released: ");
+      }
+      Serial.println(HumanReadableDecoder[i]);
+    }
+  }
+}
 
-  char out, in, out_tmp, in_tmp, state, expected_key;
-  int dly = DELAY_MS; //the delay
-  char out_string[10];
+
+//This determines the currently pressed keys. The result is the array of bool CurrentlyPressedKeys
+void DetectPressedKeys()
+{
+
+  char outer_loop, inner_loop, matrix_axis_2, matrix_axis_1, key_number, key_detect;
+  int dly = 1; //the delay
 
 
   //over the pins of the mega2560 extension. This makes wiring easy
-  for (out = LOWEST_PIN; out <= HIGHEST_PIN; out++)
+  for (outer_loop = LOWEST_PIN; outer_loop <= (HIGHEST_PIN); outer_loop++)
   {
 
     //set one pin as output
-    pinMode(out, OUTPUT);
-    //set this pin LOW
-    digitalWrite(out, LOW);
+    pinMode(outer_loop, OUTPUT);
+    //set this pin LOW. All others are pulled up High
+    digitalWrite(outer_loop, LOW);
     // wait to stabelize
-    delay(dly);
-    //over all these pins, but only half of the matrix. That's why the start is shifting with each turn.
-    for (in = out + 1; in <= (HIGHEST_PIN) ; in++)
+    //delayMicroseconds(5);
+    //over all these pins, but only less than half of the matrix (triangle). That's why the start is shifting with each turn.
+    for (inner_loop = outer_loop + 1; inner_loop <= (HIGHEST_PIN) ; inner_loop++)
     {
       //set the other pins as input if it is not the current LOW pin
-      if (out != in)
+      if (outer_loop != inner_loop)
       {
-
-
         //remove the offset
-        in_tmp = in - LOWEST_PIN + 1;
-        out_tmp = out - LOWEST_PIN + 1;
-        expected_key = int((Matrix[out_tmp - 1][in_tmp - 1])); //shift by 1 byte. The first entry is at [0][0]!
-
-		if (expected_key != ID_KEY_UNKNOWN)
-		{
-			pinMode(in, INPUT_PULLUP);
-			delay(dly);
-			int newstate = digitalRead(in);
-			if (newstate == LOW)
-			{
-			  //xx
-
-
-			  //strcpy_P(out, int((Matrix[out_tmp-1][in_tmp-1])));
-
-				// Serial.print(out_tmp);
-				// Serial.print(",");
-				// Serial.print(in_tmp);
-				// Serial.print(",");
-				//xx
-        
-        Serial.println(HumanReadableDecoder[expected_key]);
-        //Serial.print(expected_key);
-				delay(200);
-
-
-			  //Serial.print("),\n");
-
-			}
-			delay(dly);
-		}
+        matrix_axis_1 = inner_loop - LOWEST_PIN + 1;
+        matrix_axis_2 = outer_loop - LOWEST_PIN + 1;
+        key_number = int((Matrix[matrix_axis_2 - 1][matrix_axis_1 - 1])); //shift by 1. The first entry is at [0][0]!
+        //get the value if it can be assigned to a valid key. Otherwise skip.
+        if (key_number != ID_KEY_UNKNOWN)
+        {
+          pinMode(inner_loop, INPUT_PULLUP);
+          //store the result (a bool) at the right place in the summary. 
+          //But invert it as a pressed key gives the LOW from the outer_loop, not a HIGH
+          CurrentlyPressedKeys[key_number] = !digitalRead(inner_loop);
+        }
       }
-      delay(dly);
     }
-    //close the door, just to be save
-    pinMode(out, INPUT);
-    delay(dly);
+    //close the door
+    pinMode(outer_loop, INPUT);
   }
   //a printout of a "." to signalize a full turn. Two "." in series means no key press detected.
   //Serial.print("\n.");
