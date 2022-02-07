@@ -36,12 +36,12 @@ c) Use the existing Touchpad (TM42PUF), PS/2 out
   - ToDo: add Pullup resistor
   - ToDo: Check signals with Oscilloskope / Digital Analyser, compare with other Mouse
  
-## Details od c) can be found in folder \Touchpad if the work is started
+## Details of c) can be found in folder \Touchpad if the work is started
 
-d) Use the existing screen (1280x1024(?), 15.x inches, "QDI N15W Rev4")
+d) Use the existing screen (1280x800), 15.x inches, "QDI N15W Rev4")
   I buyed a piece of electronic, called "M.NT68676.2" to convert VGA/HDMI/DVI to display signals, including the inverter to power up the CCFL backlight.
   The provided cable did not match, so I need to solder one new cable out of two.
-  This needs no code if the keys of that PCB are used. But a samrter solution would be to replace these keys by some output lines of the arduino which is
+  This needs no code if the keys of that PCB are used. But a smarter solution would be to replace these keys by some output lines of the arduino which is
   already used by the keyboard matrix. Maby Fn+Shift+whatever will trigger such a output line to emulate that keypress.
   Optocoupler to isolate? "Open collector output" with a bipolar transistor?
   The Raspberry Pi needs HDMI input. DVI and VGA left unused. They can be wired to externel plugs for using this
@@ -54,7 +54,7 @@ d) Use the existing screen (1280x1024(?), 15.x inches, "QDI N15W Rev4")
 
 e) Don't use the internal DVD-Writer
   This gives some more space for wiring.
-  - ToDo: remove the front of teh drive and glue the front of the drive to the housing
+  - ToDo: remove the front of the drive and glue the front of the drive to the housing
   
 f) At least add a headphone jack. Reuse internal speakers if possible 
   - ToDo: add headphone jack and wire it to the PCM sound output of the Raspberry pi (RPi Zero does not have this, but this could be added afaik)
@@ -74,7 +74,6 @@ i) Temperatur and Voltage Monitoring, fan control and small extra Display? (2x16
   Temperatur measuring via DS18S20 (I need to check that character between the numbers...)
   Fan control via PWM?
   Voltage...How accurate can ADC be with an Arduino?
-  
   
 j) How to power on/off the Rapberry Pi? 
 	Can the Keyboard-Arduino be of any help with this task?

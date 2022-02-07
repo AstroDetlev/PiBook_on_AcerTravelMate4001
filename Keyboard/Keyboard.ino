@@ -82,12 +82,30 @@
 
 #include "ACER_TRAVELMATE4001WLMI_KEYBOARD_MATRIX.h"
 
-#define LOWEST_PIN 22
-#define HIGHEST_PIN LOWEST_PIN + 23  /* LOWEST_PIN itself is 1 pin, so there are 23 in addition*/
+#define LOWEST_MATRIX_PIN 22
+#define HIGHEST_MATRIX_PIN LOWEST_MATRIX_PIN + MATRIX_PINS_COUNT - 1/* LOWEST_PIN itself is 1 pin, so there are 23 in addition*/
 #define DELAY_MS 0
+ 
 
-bool CurrentlyPressedKeys[90];
-bool PreviouslyPressedKeys[90];
+//This is used by DetectPressedKeys
+bool CurrentlyPressedKeys[MATRIX_KEY_COUNT];
+//This is for comparing
+bool PreviouslyPressedKeys[MATRIX_KEY_COUNT];
+  char buf1[4], buf2[4];
+
+unsigned long TimeBefore, TimeAfter;
+struct DecoderCell
+{
+  char pin1 = 1; //
+  char pin2 = 1;
+  char Ps2MakeCount = 1;
+  char Ps2Make[8];
+  char Ps2BreakCount = 1;
+  char Ps2Break[8];
+};
+
+//an array of decoder cells, one for each key
+DecoderCell Decoder[MATRIX_KEY_COUNT-1] ;
 
 
 // the setup routine runs once when you press reset
@@ -102,14 +120,19 @@ void setup() {
 // the loop routine runs over and over again forever:
 void loop()
 {
-  int i;
+  int i = MATRIX_KEY_COUNT ;
+  ActivateMatrixPullUps();
+  
   //backup the old data
-  i = 90;
   while ( i-- ) *( PreviouslyPressedKeys + i ) = *( CurrentlyPressedKeys + i );
   //get new data
+
+  //TimeBefore = micros();
   DetectPressedKeys();
+  //TimeAfter = micros();
+  
   //delay(50);
-  for (i = 0; i < 90; i++)
+  for (i = 0; i < MATRIX_KEY_COUNT; i++)
   {
     if (PreviouslyPressedKeys[i] != CurrentlyPressedKeys[i])
     {
@@ -117,58 +140,68 @@ void loop()
       if (CurrentlyPressedKeys[i])
       {
         Serial.print("pressed: ");
+        
       }
       else
       {
         Serial.print("released: ");
       }
-      Serial.println(HumanReadableDecoder[i]);
+//Serial.print("Duration#");
+//Serial.print(itoa(TimeAfter-TimeBefore, buf1, 10));
+Serial.print("Key#");
+Serial.print(itoa(i, buf1, 10));
+Serial.print(",PinA=");
+Serial.print(itoa(MatrixPins[i].PinA, buf1, 10));
+Serial.print(",PinB=");
+Serial.print(itoa( MatrixPins[i].PinB, buf1, 10));
+Serial.print(",HRLabel='");
+Serial.print(HumanReadableDecoder[i]);
+Serial.println("'");
     }
   }
 }
 
 
+
 //This determines the currently pressed keys. The result is the array of bool CurrentlyPressedKeys
 void DetectPressedKeys()
 {
+  int i, OutPin, InPin;
 
-  char outer_loop, inner_loop, matrix_axis_2, matrix_axis_1, key_number, key_detect;
-  int dly = 1; //the delay
-
-
-  //over the pins of the mega2560 extension. This makes wiring easy
-  for (outer_loop = LOWEST_PIN; outer_loop <= (HIGHEST_PIN); outer_loop++)
+  //over all keys
+  for (i = 0; i < MATRIX_KEY_COUNT; i++)
   {
+    //set the offset to get the Ardino pin counting based on the matrix pin counting
+    //Pin 1 of the matrix is wired to LOWEST_MATRIX_PIN
+    OutPin = MatrixPins[i].PinA + LOWEST_MATRIX_PIN -1;
+    InPin = MatrixPins[i].PinB + LOWEST_MATRIX_PIN -1;
 
-    //set one pin as output
-    pinMode(outer_loop, OUTPUT);
-    //set this pin LOW. All others are pulled up High
-    digitalWrite(outer_loop, LOW);
-    // wait to stabelize
-    //delayMicroseconds(5);
-    //over all these pins, but only less than half of the matrix (triangle). That's why the start is shifting with each turn.
-    for (inner_loop = outer_loop + 1; inner_loop <= (HIGHEST_PIN) ; inner_loop++)
-    {
-      //set the other pins as input if it is not the current LOW pin
-      if (outer_loop != inner_loop)
-      {
-        //remove the offset
-        matrix_axis_1 = inner_loop - LOWEST_PIN + 1;
-        matrix_axis_2 = outer_loop - LOWEST_PIN + 1;
-        key_number = int((Matrix[matrix_axis_2 - 1][matrix_axis_1 - 1])); //shift by 1. The first entry is at [0][0]!
-        //get the value if it can be assigned to a valid key. Otherwise skip.
-        if (key_number != ID_KEY_UNKNOWN)
-        {
-          pinMode(inner_loop, INPUT_PULLUP);
-          //store the result (a bool) at the right place in the summary. 
-          //But invert it as a pressed key gives the LOW from the outer_loop, not a HIGH
-          CurrentlyPressedKeys[key_number] = !digitalRead(inner_loop);
-        }
-      }
-    }
-    //close the door
-    pinMode(outer_loop, INPUT);
+    //set the output pin as OUTPUT
+    pinMode(OutPin, OUTPUT);
+    
+    //set output pin LOW.
+    digitalWrite(OutPin, LOW);
+  
+    //Set the input pullup before reading
+    pinMode(InPin, INPUT_PULLUP);
+    
+    //get and store the result (a bool) at the right place in the summary.
+    //But invert it as a pressed key gives the LOW from the outer_loop, not a HIGH
+    CurrentlyPressedKeys[i] = !digitalRead(InPin);
+        
+    //remove the output voltage 
+    pinMode(OutPin, INPUT);
+    pinMode(OutPin, INPUT_PULLUP);
   }
-  //a printout of a "." to signalize a full turn. Two "." in series means no key press detected.
-  //Serial.print("\n.");
+}
+
+
+void ActivateMatrixPullUps()
+{
+  int i;
+  for (i = LOWEST_MATRIX_PIN; i <= (HIGHEST_MATRIX_PIN); i++)
+  {
+    pinMode(i, INPUT);
+    pinMode(i, INPUT_PULLUP);
+  }
 }
