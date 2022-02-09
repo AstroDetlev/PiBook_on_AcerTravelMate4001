@@ -14,7 +14,7 @@
    2. All Pins are input, with Pullup High
    3. One of the Pins is set to OUTPUT Low
    4. Check the Inputs. Is there any LOW?
-   5. If yes, decode which key was pressed and send this String over the serial
+   5. If yes, decode which key was pressed and send this String over the serial (currently)
    6. The OUTPUT Pin is set to Input Pullup again
    7. The next Pin is set to OUTPUT Low.
    8. Repeat 4 - 7 with all pins
@@ -84,52 +84,55 @@
 
 #define LOWEST_MATRIX_PIN 22
 #define HIGHEST_MATRIX_PIN LOWEST_MATRIX_PIN + MATRIX_PINS_COUNT - 1/* LOWEST_PIN itself is 1 pin, so there are 23 in addition*/
+#define CAPS_LOCK_LED HIGHEST_MATRIX_PIN + 1
+#define NUM_LOCK_LED HIGHEST_MATRIX_PIN + 2
+#define SCROLL_LOCK_LED HIGHEST_MATRIX_PIN + 3
+#define DISP_KEY1 HIGHEST_MATRIX_PIN + 4
+#define DISP_KEY2 HIGHEST_MATRIX_PIN + 5
+#define DISP_KEY3 HIGHEST_MATRIX_PIN + 6
+#define DISP_KEY4 HIGHEST_MATRIX_PIN + 7
+#define DISP_KEY5 HIGHEST_MATRIX_PIN + 8
+
+
 #define DELAY_MS 0
- 
+
+const unsigned char DISPLAY_KEY_1 = 0x01;  
+const unsigned char DISPLAY_KEY_2 = 0x02;  
+const unsigned char DISPLAY_KEY_3 = 0x04;  
+const unsigned char DISPLAY_KEY_4 = 0x08;  
+const unsigned char DISPLAY_KEY_5 = 0x10;  
 
 //This is used by DetectPressedKeys
 bool CurrentlyPressedKeys[MATRIX_KEY_COUNT];
 //This is for comparing
 bool PreviouslyPressedKeys[MATRIX_KEY_COUNT];
-  char buf1[4], buf2[4];
-
+char buf1[4], buf2[4];
+char buffer[10];
 unsigned long TimeBefore, TimeAfter;
-struct DecoderCell
-{
-  char pin1 = 1; //
-  char pin2 = 1;
-  char Ps2MakeCount = 1;
-  char Ps2Make[8];
-  char Ps2BreakCount = 1;
-  char Ps2Break[8];
-};
-
-//an array of decoder cells, one for each key
-DecoderCell Decoder[MATRIX_KEY_COUNT-1] ;
-
 
 // the setup routine runs once when you press reset
-
 void setup() {
 
   // initialize serial communication at 9600 bits per second:
   //This is the debug output.
   Serial.begin(9600);
+  //Let all leds flash up. Nice during development.
+  ToggleAllKbdLedsAndDspKeys();
+  ActivatePullUpsForTheMatrix();
 }
 
 // the loop routine runs over and over again forever:
 void loop()
 {
   int i = MATRIX_KEY_COUNT ;
-  ActivateMatrixPullUps();
-  
-  //backup the old data
+    
+  //backup the old detected data
   while ( i-- ) *( PreviouslyPressedKeys + i ) = *( CurrentlyPressedKeys + i );
   //get new data
 
-  //TimeBefore = micros();
+  TimeBefore = micros();
   DetectPressedKeys();
-  //TimeAfter = micros();
+  TimeAfter = micros();
   
   //delay(50);
   for (i = 0; i < MATRIX_KEY_COUNT; i++)
@@ -139,35 +142,35 @@ void loop()
       //change detected
       if (CurrentlyPressedKeys[i])
       {
-        Serial.print("pressed: ");
-        
+        Serial.print(F("pressed: "));
       }
       else
       {
-        Serial.print("released: ");
+        Serial.print(F("released: "));
       }
-//Serial.print("Duration#");
-//Serial.print(itoa(TimeAfter-TimeBefore, buf1, 10));
-Serial.print("Key#");
-Serial.print(itoa(i, buf1, 10));
-Serial.print(",PinA=");
-Serial.print(itoa(MatrixPins[i].PinA, buf1, 10));
-Serial.print(",PinB=");
-Serial.print(itoa( MatrixPins[i].PinB, buf1, 10));
-Serial.print(",HRLabel='");
-Serial.print(HumanReadableDecoder[i]);
-Serial.println("'");
+      strcpy_P(buffer, (char*)pgm_read_word(&(HumanReadableDecoder[i])));
+            
+      Serial.print(F("Key#"));
+      Serial.print(itoa(i, buf1, 10));
+      Serial.print(F(",PinA="));
+      Serial.print(itoa(MatrixPins[i].PinA, buf1, 10));
+      Serial.print(F(",PinB="));
+      Serial.print(itoa(MatrixPins[i].PinB, buf2, 10));
+      Serial.print(F(",HRLabel='"));
+      Serial.print(buffer);
+      Serial.print(F("' ScanDuration(µs)"));
+      Serial.print(itoa(TimeAfter-TimeBefore, buf1, 10));
+      Serial.println(F("'"));
     }
   }
 }
 
-
-
-//This determines the currently pressed keys. The result is the array of bool CurrentlyPressedKeys
+/*
+  Determines the currently pressed keys. The result is the array of bool CurrentlyPressedKeys
+*/
 void DetectPressedKeys()
 {
   int i, OutPin, InPin;
-
   //over all keys
   for (i = 0; i < MATRIX_KEY_COUNT; i++)
   {
@@ -177,26 +180,32 @@ void DetectPressedKeys()
     InPin = MatrixPins[i].PinB + LOWEST_MATRIX_PIN -1;
 
     //set the output pin as OUTPUT
-    pinMode(OutPin, OUTPUT);
+    //pinMode(OutPin, OUTPUT);
     
     //set output pin LOW.
-    digitalWrite(OutPin, LOW);
+    //digitalWrite(OutPin, LOW);
+    SetOutPin(OutPin, LOW);
   
     //Set the input pullup before reading
     pinMode(InPin, INPUT_PULLUP);
+
+    //Without a small delay, keys may be accidently reported as pressed, even without any user action.
+    //delayMicroseconds(5);
     
     //get and store the result (a bool) at the right place in the summary.
-    //But invert it as a pressed key gives the LOW from the outer_loop, not a HIGH
+    //But invert it as a pressed key gives the LOW from the OutPin.
     CurrentlyPressedKeys[i] = !digitalRead(InPin);
-        
+
     //remove the output voltage 
     pinMode(OutPin, INPUT);
     pinMode(OutPin, INPUT_PULLUP);
   }
 }
 
-
-void ActivateMatrixPullUps()
+/*
+  Activate the internal Pullup Resistors for all Pins wired to the Keyboard Matrix   
+*/
+void ActivatePullUpsForTheMatrix()
 {
   int i;
   for (i = LOWEST_MATRIX_PIN; i <= (HIGHEST_MATRIX_PIN); i++)
@@ -204,4 +213,119 @@ void ActivateMatrixPullUps()
     pinMode(i, INPUT);
     pinMode(i, INPUT_PULLUP);
   }
+}
+/*
+  Set the 3 Keyboard LEDs (Caps Lock, Num Lock, Scroll Lock)
+  Paranmeter: char
+  Allows to set/unset all 3 LEDS.
+  Use the PS2 constants PS2_H2K_LED_NUM_LOCK, PS2_H2K_LED_CAPS_LOCK, PS2_H2K_LED_SCROLL_LOCK to combine the input.
+  An active bit means: Set the LED. The other 5 bits will be ignored.  
+*/
+void SetKeyboardLEDs (char LEDs)
+{
+
+    char numlock, capslock, scrolllock;
+
+Serial.println(itoa(LEDs, buf1, 16));
+
+    numlock =     LEDs & PS2_H2K_LED_NUM_LOCK;
+    capslock =    LEDs & PS2_H2K_LED_CAPS_LOCK;
+    scrolllock =  LEDs & PS2_H2K_LED_SCROLL_LOCK;
+
+Serial.print(itoa(numlock, buf1, 16));
+Serial.print(itoa(capslock, buf1, 16));
+Serial.print(itoa(scrolllock, buf1, 16));
+    
+    pinMode(CAPS_LOCK_LED, OUTPUT);
+    pinMode(NUM_LOCK_LED, OUTPUT);
+    pinMode(SCROLL_LOCK_LED, OUTPUT);
+    
+    //set the output pin.
+
+    if (numlock)
+    { digitalWrite(NUM_LOCK_LED, HIGH);} else { digitalWrite(NUM_LOCK_LED, LOW);}  //middle on pcb
+    if (capslock)
+    { digitalWrite(PS2_H2K_LED_CAPS_LOCK, HIGH);} else { digitalWrite(PS2_H2K_LED_CAPS_LOCK, LOW);}  //left on pcb
+    if (scrolllock)
+    { digitalWrite(SCROLL_LOCK_LED, HIGH);} else { digitalWrite(SCROLL_LOCK_LED, LOW);}  //right on pcb
+
+}
+
+/*
+  Set the 5 Keys for the Display controller board.
+  Paranmeter: char
+  Allows to set/unset all 5 Keys.
+  Use the constants DISPLAY_KEY_1...DISPLAY_KEY_5 to combine the input.
+  An active bit means: Set the Key. The other 3 bits will be ignored.  
+*/
+void SetDisplayControlKeys (char KeyValues)
+{
+    unsigned char key[5], i;
+    unsigned char outpin[5];
+    bool outval[5];
+
+    //prepare an array of the output pins. They are not guaranteed to be in a seamless row.
+    outpin[0] = DISP_KEY1;
+    outpin[1] = DISP_KEY2;
+    outpin[2] = DISP_KEY3;
+    outpin[3] = DISP_KEY4;
+    outpin[4] = DISP_KEY5;
+  
+    //over all possible keys
+    for (i = 0; i < 5; i++)
+    {
+      //shift the filter bit each time
+      key[i] =  KeyValues & (0x01 << i);
+      //preset
+      outval[i] = LOW;
+      if (key[i]) {outval[i] = HIGH;}         
+      //set if req'd
+      SetOutPin(outpin[i], outval[i]);
+
+      Serial.println(itoa(KeyValues, buf1, 16));
+      Serial.print(itoa(key[i], buf1, 16));
+      Serial.print(itoa(outval[i], buf1, 16));
+    }
+}
+
+/*
+  Set a single pin as output and give it the defined value
+  To simplify bug hinting, this shall be the only way to set any output value. 
+*/
+void SetOutPin (char PinNumber, bool OutVal)
+{
+    pinMode(PinNumber, OUTPUT);
+    digitalWrite(PinNumber, OutVal); 
+}
+
+/*
+  Iterate over the keyboard LEDs and the keys to adjust the display adapter board.
+  Set each pin to High, wait some time, then set back to low  
+  Usefull for hardware debugging. The LEDs and Keys are known via their defines.
+*/
+void ToggleAllKbdLedsAndDspKeys()
+{
+    const unsigned long myDelay = 500; //milliseconds
+    const unsigned char pinCount = 8;
+    unsigned char outpin[pinCount], i;
+
+    //The LEDs
+    outpin[0] = CAPS_LOCK_LED;
+    outpin[1] = NUM_LOCK_LED;
+    outpin[2] = SCROLL_LOCK_LED;
+
+    //The Keys
+    outpin[3] = DISP_KEY1;
+    outpin[4] = DISP_KEY2;
+    outpin[5] = DISP_KEY3;
+    outpin[6] = DISP_KEY4;
+    outpin[7] = DISP_KEY5;
+    
+    for (i = 0; i < pinCount; i++)
+    {
+      SetOutPin(outpin[i], HIGH);
+      delay(myDelay);
+      SetOutPin(outpin[i], LOW);
+      
+    }
 }
