@@ -1,7 +1,7 @@
 # PiBook_on_AcerTravelMate4001
 A dead Acer Travelmate 4001 WLMI may become alive again with a "Raspberry Pi heart" in it
 
-There are easier ways to get a so-called PiBook, but I want to figure it out how to do this.
+There are easier ways to get a so-called PiBook, but I want to figure it out how to do this. 
 
 My plan:
 
@@ -11,19 +11,22 @@ a) If possible use the housing of the TravelMate. But maybe there is not enough 
 ## Details of a) can be found in folder \housing if the work is started
 
 b) Use the existing keyboard matrix (german layout, 89 keys, curved)
-  Using a bigger Arduino with many I/O to deal with 24 the pins.
-  Currently in use is an full size Arduino Mega2560. Maybe a miniaturized version will be the final version.
+  Using a bigger Arduino with many I/O to deal with the 24 matrix pins.
+  Currently in use is a full size Arduino Mega2560. Maybe a miniaturized version will be the final version. UART is not needed in the final version.
   current state:
-  - Working: It detects all 89 keys
-  - Working: Temporary output of a detected key via UART (@9k6) 
-  - ToDo: debouncing/dead time for key repeat (Timer triggered scan?)
+  - Working: It detects all 89 keys (needs 24pins)
+  - Working: Temporary output of a detected key via UART (@9k6)
+  - Working: scan time is around 2,5ms. No debouncing hard- or software and no delay in use. 
+  - Working: Fn-Detection for debug out
+  - ToDo: key repeat (Timer triggered scan?)
   - ToDo: automatic key press acceleration
-  - ToDo: Integrate PS/2 Library for becoming a "homemade PS/2 Keyboard" (Also: low/capital letter and all the Shift/Alt/Ctrl key stuff)
-  - ToDo: Glue logic for PS/2 (Buffer gate, Pullup-resistors)
-  - ToDo: Check signals with Oscilloskope / Digital Analyser, compare with other keyboard
-  - Todo: The 3 LEDs of a usual keyboard
+  - ToDo: Integrate PS/2 Library for becoming a "homemade PS/2 Keyboard". 
+  - ToDo: Glue logic for PS/2 (Buffer gate, Pullup-resistors. Will need additional 2 pins)
+  - ToDo: Check signals with Oscilloskope / Digital Analyser, compare with other keyboard. 
+  - Done: The 3 LEDs of a usual keyboard (additional 3 pins) Subject to be dropped if running out of pins on final platform.
   - ToDo: Add a photo of the layout and the wiring
   
+  Pin count: Matrix + LEDs + PS2 + DisplayAdapterKeys = 24(in/out) + 3(out) + 2(in/out) + 5(out) = 34. 
 ## Details of b) can be found in folder \keyboard
   
 c) Use the existing Touchpad (TM42PUF), PS/2 out
