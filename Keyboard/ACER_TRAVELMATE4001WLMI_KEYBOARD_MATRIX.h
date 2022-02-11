@@ -1,8 +1,8 @@
 /*
- * 2021-12-01
+ * 2022-02-10
  * 
  * Target System: Arduino Mega2560
- * Arduino IDE: 1.8.14
+ * Arduino IDE: 1.8.19
  * 
 */
 
@@ -18,96 +18,96 @@
  But if the last button of this array can be used, at least the structures of this sketch are ok.
 */
 
-#define ID_KEY_UNKNOWN 0
-#define ID_KEY_F11 1
-#define ID_KEY_F12 2
-#define ID_KEY_F8  3
-#define ID_KEY_Q 4
-#define ID_KEY_F4  5
-#define ID_KEY_F3  6
-#define ID_KEY_F7  7
-#define ID_KEY_1 8
-#define ID_KEY_ESC 9
-#define ID_KEY_TILDE  10
-#define ID_KEY_F5  11
-#define ID_KEY_TAB 12
-#define ID_KEY_F1  13
-#define ID_KEY_F2  14
-#define ID_KEY_F6  15
-#define ID_KEY_CAPS_LOCK 16
-#define ID_KEY_F10 17
-#define ID_KEY_F9  18
-#define ID_KEY_BACKSPACE 19
-#define ID_KEY_3 20
-#define ID_KEY_2 21
-#define ID_KEY_ARROW_UP  22
-#define ID_KEY_PAUSE23
-#define ID_KEY_PRINT 24
-#define ID_KEY_INSERT 25
-#define ID_KEY_DELETE 26
-#define ID_KEY_HOME 27
-#define ID_KEY_PAGE_UP 28
-#define ID_KEY_PAGE_DOWN 29
-#define ID_KEY_ARROW_RIGHT 30
-#define ID_KEY_ARROW_LEFT 31
-#define ID_KEY_ARROW_DOWN 32
-#define ID_KEY_UE  33
-#define ID_KEY_P 34
-#define ID_KEY_AE  35
-#define ID_KEY_OE  36
-#define ID_KEY_MINUS 37
-#define ID_KEY_DOT 38
-#define ID_KEY_DOLLAR  39
-#define ID_KEY_QUESTIONMARK  40
-#define ID_KEY_7 41
-#define ID_KEY_9 42
-#define ID_KEY_5 43
-#define ID_KEY_0 44
-#define ID_KEY_APOS 45
-#define ID_KEY_6 46
-#define ID_KEY_8 47
-#define ID_KEY_4 48
-#define ID_KEY_EURO  49
-#define ID_KEY_CTRL_L 50
-#define ID_KEY_CTRL_R 51
-#define ID_KEY_O 52
-#define ID_KEY_ASTERISK  53
-#define ID_KEY_T 54
-#define ID_KEY_U 55
-#define ID_KEY_R 56
-#define ID_KEY_W 57
-#define ID_KEY_SHIFT_R 58
-#define ID_KEY_SHIFT_L 59
-#define ID_KEY_I 60
-#define ID_KEY_ENTER 61
-#define ID_KEY_H 62
-#define ID_KEY_Z 63
-#define ID_KEY_E 64
-#define ID_KEY_S 65
-#define ID_KEY_L 66
-#define ID_KEY_K 67
-#define ID_KEY_M 68
-#define ID_KEY_COMMA 69
-#define ID_KEY_SHARP 70
-#define ID_KEY_END 71
-#define ID_KEY_WIN_R 72
-#define ID_KEY_G 73
-#define ID_KEY_V 74
-#define ID_KEY_SPACE 75
-#define ID_KEY_C 76
-#define ID_KEY_J 77
-#define ID_KEY_N 78
-#define ID_KEY_B 79
-#define ID_KEY_F 80
-#define ID_KEY_A 81
-#define ID_KEY_D 82
-#define ID_KEY_SMALLER 83
-#define ID_KEY_X 84
-#define ID_KEY_WIN_L 85
-#define ID_KEY_ALT_L 86
-#define ID_KEY_ALT_R 87
-#define ID_KEY_Y 88
-#define ID_KEY_FN  89
+
+#define ID_KEY_F11 				0 
+#define ID_KEY_F12 				1 
+#define ID_KEY_F8  				2 
+#define ID_KEY_Q 				3 
+#define ID_KEY_F4  				4 
+#define ID_KEY_F3  				5 
+#define ID_KEY_F7  				6 
+#define ID_KEY_1 				7 
+#define ID_KEY_ESC				8 
+#define ID_KEY_TILDE  			9 
+#define ID_KEY_F5  				10
+#define ID_KEY_TAB 				11
+#define ID_KEY_F1  				12
+#define ID_KEY_F2  				13
+#define ID_KEY_F6  				14
+#define ID_KEY_CAPS_LOCK 		15
+#define ID_KEY_F10 				16
+#define ID_KEY_F9  				17
+#define ID_KEY_BACKSPACE 		18
+#define ID_KEY_3  				19
+#define ID_KEY_2  				20
+#define ID_KEY_ARROW_UP  		21
+#define ID_KEY_PAUSE 			22
+#define ID_KEY_PRINT  			23
+#define ID_KEY_INSERT  			24
+#define ID_KEY_DELETE  			25
+#define ID_KEY_HOME 			26
+#define ID_KEY_PAGE_UP 			27
+#define ID_KEY_PAGE_DOWN  		28
+#define ID_KEY_ARROW_RIGHT  	29
+#define ID_KEY_ARROW_LEFT  		30
+#define ID_KEY_ARROW_DOWN 		31
+#define ID_KEY_UE  				32
+#define ID_KEY_P  				33
+#define ID_KEY_AE  				34
+#define ID_KEY_OE   			35
+#define ID_KEY_MINUS  			36
+#define ID_KEY_DOT  			37
+#define ID_KEY_DOLLAR   		38
+#define ID_KEY_QUESTIONMARK  	39
+#define ID_KEY_7  				40
+#define ID_KEY_9 				41
+#define ID_KEY_5  				42
+#define ID_KEY_0  				43
+#define ID_KEY_APOS  			44
+#define ID_KEY_6  				45
+#define ID_KEY_8  				46
+#define ID_KEY_4  				47
+#define ID_KEY_EURO   			48
+#define ID_KEY_CTRL_L  			49
+#define ID_KEY_CTRL_R  			50
+#define ID_KEY_O  				51
+#define ID_KEY_ASTERISK   		52
+#define ID_KEY_T 				53
+#define ID_KEY_U  				54
+#define ID_KEY_R  				55
+#define ID_KEY_W  				56
+#define ID_KEY_SHIFT_R  		57
+#define ID_KEY_SHIFT_L  		58
+#define ID_KEY_I  				59
+#define ID_KEY_ENTER  			60
+#define ID_KEY_H  				61
+#define ID_KEY_Z  				62
+#define ID_KEY_E  				63
+#define ID_KEY_S  				64
+#define ID_KEY_L  				65
+#define ID_KEY_K  				66
+#define ID_KEY_M  				67
+#define ID_KEY_COMMA  			68
+#define ID_KEY_SHARP  			69
+#define ID_KEY_END  			70
+#define ID_KEY_WIN_R  			71
+#define ID_KEY_G  				72
+#define ID_KEY_V  				73
+#define ID_KEY_SPACE  			74
+#define ID_KEY_C  				75
+#define ID_KEY_J  				76
+#define ID_KEY_N  				77
+#define ID_KEY_B  				78
+#define ID_KEY_F  				79
+#define ID_KEY_A  				80
+#define ID_KEY_D  				81
+#define ID_KEY_SMALLER  		82
+#define ID_KEY_X  				83
+#define ID_KEY_WIN_L  			84
+#define ID_KEY_ALT_L  			85
+#define ID_KEY_ALT_R  			86
+#define ID_KEY_Y  				87
+#define ID_KEY_FN   			88
 
 
 const char PROGMEM HR_KEY_F11[] =      			"F11"                 ;
@@ -200,6 +200,189 @@ const char PROGMEM HR_KEY_ALT_R[] =      			"AltGr"           ;
 const char PROGMEM HR_KEY_Y[] =     				"Y"               ;
 const char PROGMEM HR_KEY_FN[] =       			"Fn"                  ;
 
+
+const char PROGMEM HR_Fn_KEY_F11[] 		=      			"NumPad";
+const char PROGMEM HR_Fn_KEY_F12[] 		=      			"Scroll";
+const char PROGMEM HR_Fn_KEY_F8[] 		=      			"Speaker";
+const char PROGMEM HR_Fn_KEY_Q[] 		  = "";
+const char PROGMEM HR_Fn_KEY_F4[] 		=      			"Sleep";
+const char PROGMEM HR_Fn_KEY_F3[] 		=      			"Wake up";
+const char PROGMEM HR_Fn_KEY_F7[] 		=      			"Touchpad";
+const char PROGMEM HR_Fn_KEY_1[] 		  = "";
+const char PROGMEM HR_Fn_KEY_ESC[] 		= "";
+const char PROGMEM HR_Fn_KEY_TILDE[] =       		"";
+const char PROGMEM HR_Fn_KEY_F5[] =       			"Display";
+const char PROGMEM HR_Fn_KEY_TAB[] =      			"";
+const char PROGMEM HR_Fn_KEY_F1[] =       			"";
+const char PROGMEM HR_Fn_KEY_F2[] =       			"Power Up";
+const char PROGMEM HR_Fn_KEY_F6[] =       			"Backlight";
+const char PROGMEM HR_Fn_KEY_CAPS_LOCK[] =   		"";
+const char PROGMEM HR_Fn_KEY_F10[] =      			"";
+const char PROGMEM HR_Fn_KEY_F9[] =       			"";
+const char PROGMEM HR_Fn_KEY_BACKSPACE[] =  		"";
+const char PROGMEM HR_Fn_KEY_3[] =      			"";
+const char PROGMEM HR_Fn_KEY_2[] =      			"";
+const char PROGMEM HR_Fn_KEY_ARROW_UP[] =       	"Sound+";
+const char PROGMEM HR_Fn_KEY_BREAK[] =      		"";
+const char PROGMEM HR_Fn_KEY_PRINT[] =      		"";
+const char PROGMEM HR_Fn_KEY_INSERT[] =      		"";
+const char PROGMEM HR_Fn_KEY_DELETE[] =      		"";
+const char PROGMEM HR_Fn_KEY_HOME[] =     			"";
+const char PROGMEM HR_Fn_KEY_PAGE_UP[] =     		"";
+const char PROGMEM HR_Fn_KEY_PAGE_DOWN[] =   		"";
+const char PROGMEM HR_Fn_KEY_ARROW_RIGHT[] =      	"Display-";
+const char PROGMEM HR_Fn_KEY_ARROW_LEFT[] =      	"Display+";
+const char PROGMEM HR_Fn_KEY_ARROW_DOWN[] =      	"Sound-";
+const char PROGMEM HR_Fn_KEY_UE[] =       			"";
+const char PROGMEM HR_Fn_KEY_P[] =      			"-";
+const char PROGMEM HR_Fn_KEY_AE[] =       			"";
+const char PROGMEM HR_Fn_KEY_OE[] =       			"+";
+const char PROGMEM HR_Fn_KEY_MINUS[] =    			"/";
+const char PROGMEM HR_Fn_KEY_DOT[] =    			",";
+const char PROGMEM HR_Fn_KEY_DOLLAR[] =     		"";
+const char PROGMEM HR_Fn_KEY_QUESTIONMARK[] =       "";
+const char PROGMEM HR_Fn_KEY_7[] =      			"7";
+const char PROGMEM HR_Fn_KEY_9[] =      			"9";
+const char PROGMEM HR_Fn_KEY_5[] =      			"";
+const char PROGMEM HR_Fn_KEY_0[] =      			"*";
+const char PROGMEM HR_Fn_KEY_APOS[] =     			"";
+const char PROGMEM HR_Fn_KEY_6[] =      			"";
+const char PROGMEM HR_Fn_KEY_8[] =      			"8";
+const char PROGMEM HR_Fn_KEY_4[] =      			"";
+const char PROGMEM HR_Fn_KEY_EURO[] =     			"";
+const char PROGMEM HR_Fn_KEY_CTRL_L[] =      		"";
+const char PROGMEM HR_Fn_KEY_CTRL_R[] =      		"";
+const char PROGMEM HR_Fn_KEY_O[] =      			"6";
+const char PROGMEM HR_Fn_KEY_ASTERISK[] =   		"";
+const char PROGMEM HR_Fn_KEY_T[] =      			"";
+const char PROGMEM HR_Fn_KEY_U[] =      			"4";
+const char PROGMEM HR_Fn_KEY_R[] =      			"";
+const char PROGMEM HR_Fn_KEY_W[] =      			"";
+const char PROGMEM HR_Fn_KEY_SHIFT_R[] =      		"";
+const char PROGMEM HR_Fn_KEY_SHIFT_L[] =      		"";
+const char PROGMEM HR_Fn_KEY_I[] =      			"5";
+const char PROGMEM HR_Fn_KEY_ENTER[] =      		"";
+const char PROGMEM HR_Fn_KEY_H[] =      			"";
+const char PROGMEM HR_Fn_KEY_Z[] =      			"";
+const char PROGMEM HR_Fn_KEY_E[] =      			"";
+const char PROGMEM HR_Fn_KEY_S[] =      			"";
+const char PROGMEM HR_Fn_KEY_L[] =      			"3";
+const char PROGMEM HR_Fn_KEY_K[] =      			"2";
+const char PROGMEM HR_Fn_KEY_M[] =      			"0";
+const char PROGMEM HR_Fn_KEY_COMMA[] =  			"";
+const char PROGMEM HR_Fn_KEY_SHARP[] =    			"";
+const char PROGMEM HR_Fn_KEY_END[] =      			"";
+const char PROGMEM HR_Fn_KEY_WIN_R[] =      		"";
+const char PROGMEM HR_Fn_KEY_G[] =      			"";
+const char PROGMEM HR_Fn_KEY_V[] =      			"";
+const char PROGMEM HR_Fn_KEY_SPACE[] =      		"";
+const char PROGMEM HR_Fn_KEY_C[] =     				"";
+const char PROGMEM HR_Fn_KEY_J[] =      			"1";
+const char PROGMEM HR_Fn_KEY_N[] =      			"";
+const char PROGMEM HR_Fn_KEY_B[] =      			"";
+const char PROGMEM HR_Fn_KEY_F[] =      			"";
+const char PROGMEM HR_Fn_KEY_A[] =      			"";
+const char PROGMEM HR_Fn_KEY_D[] =      			"";
+const char PROGMEM HR_Fn_KEY_SMALLER[] =    		"";
+const char PROGMEM HR_Fn_KEY_X[] =      			"";
+const char PROGMEM HR_Fn_KEY_WIN_L[] =      		"";
+const char PROGMEM HR_Fn_KEY_ALT_L[] =      		"";
+const char PROGMEM HR_Fn_KEY_ALT_R[] =      		"";
+const char PROGMEM HR_Fn_KEY_Y[] =     				"";
+const char PROGMEM HR_Fn_KEY_FN[] =       			"";
+
+const bool FnAffectedKeys[MATRIX_KEY_COUNT] =
+{
+  1, /*KEY_F11*/
+  1, /*KEY_F12*/
+  1, /*KEY_F8*/
+  0, /*KEY_Q*/
+  1, /*KEY_F4*/
+  1, /*KEY_F3*/
+  1, /*KEY_F7*/
+  0, /*KEY_1*/
+  0, /*KEY_ESC*/
+  0, /*KEY_TILDE*/
+  1, /*KEY_F5*/
+  0, /*KEY_TAB*/
+  0, /*KEY_F1*/
+  1, /*KEY_F2*/
+  1, /*KEY_F6*/
+  0, /*KEY_CAPS_LOCK*/
+  0, /*KEY_F10*/
+  0, /*KEY_F9*/
+  0, /*KEY_BACKSPACE*/
+  0, /*KEY_3*/
+  0, /*KEY_2*/
+  1, /*KEY_ARROW_UP*/
+  0, /*KEY_BREAK*/
+  0, /*KEY_PRINT*/
+  0, /*KEY_INSERT*/
+  0, /*KEY_DELETE*/
+  0, /*KEY_HOME*/
+  0, /*KEY_PAGE_UP*/
+  0, /*KEY_PAGE_DOWN*/
+  1, /*KEY_ARROW_RIGHT*/
+  1, /*KEY_ARROW_LEFT*/
+  1, /*KEY_ARROW_DOWN*/
+  0, /*KEY_UE*/
+  1, /*KEY_P*/
+  0, /*KEY_AE*/
+  1, /*KEY_OE*/
+  1, /*KEY_MINUS*/
+  1, /*KEY_DOT*/
+  0, /*KEY_DOLLAR*/
+  0, /*KEY_QUESTIONMARK*/
+  1, /*KEY_7*/
+  1, /*KEY_9*/
+  0, /*KEY_5*/
+  1, /*KEY_0*/
+  0, /*KEY_APOS*/
+  0, /*KEY_6*/
+  1, /*KEY_8*/
+  0, /*KEY_4*/
+  0, /*KEY_EURO*/
+  0, /*KEY_CTRL_L*/
+  0, /*KEY_CTRL_R*/
+  1, /*KEY_O*/
+  0, /*KEY_ASTERISK*/
+  0, /*KEY_T*/
+  1, /*KEY_U*/
+  0, /*KEY_R*/
+  0, /*KEY_W*/
+  0, /*KEY_SHIFT_R*/
+  0, /*KEY_SHIFT_L*/
+  1, /*KEY_I*/
+  0, /*KEY_ENTER*/
+  0, /*KEY_H*/
+  0, /*KEY_Z*/
+  0, /*KEY_E*/
+  0, /*KEY_S*/
+  1, /*KEY_L*/
+  1, /*KEY_K*/
+  1, /*KEY_M*/
+  0, /*KEY_COMMA*/
+  0, /*KEY_SHARP*/
+  0, /*KEY_END*/
+  0, /*KEY_WIN_R*/
+  0, /*KEY_G*/
+  0, /*KEY_V*/
+  0, /*KEY_SPACE*/
+  0, /*KEY_C*/
+  1, /*KEY_J*/
+  0, /*KEY_N*/
+  0, /*KEY_B*/
+  0, /*KEY_F*/
+  0, /*KEY_A*/
+  0, /*KEY_D*/
+  0, /*KEY_SMALLER*/
+  0, /*KEY_X*/
+  0, /*KEY_WIN_L*/
+  0, /*KEY_ALT_L*/
+  0, /*KEY_ALT_R*/
+  0, /*KEY_Y*/
+  0, /*KEY_FN*/
+};
 
   /*This is the array that in a way holds the labels of the Keys. If you got the cell content from the Matrix, this is the transformation to a human readable string, just to see
     the keyboard decoder is doing the right things and the wiring is ok.  
@@ -297,6 +480,98 @@ const char* const HumanReadableDecoder[MATRIX_KEY_COUNT] PROGMEM =
 	,HR_KEY_FN
 };
 
+const char* const HumanReadableDecoderWithFn[MATRIX_KEY_COUNT] PROGMEM =
+{
+	 HR_Fn_KEY_F11
+	,HR_Fn_KEY_F12
+	,HR_Fn_KEY_F8
+	,HR_Fn_KEY_Q
+	,HR_Fn_KEY_F4
+	,HR_Fn_KEY_F3
+	,HR_Fn_KEY_F7
+	,HR_Fn_KEY_1
+	,HR_Fn_KEY_ESC
+	,HR_Fn_KEY_TILDE
+	,HR_Fn_KEY_F5
+	,HR_Fn_KEY_TAB
+	,HR_Fn_KEY_F1
+	,HR_Fn_KEY_F2
+	,HR_Fn_KEY_F6
+	,HR_Fn_KEY_CAPS_LOCK
+	,HR_Fn_KEY_F10
+	,HR_Fn_KEY_F9
+	,HR_Fn_KEY_BACKSPACE
+	,HR_Fn_KEY_3
+	,HR_Fn_KEY_2
+	,HR_Fn_KEY_ARROW_UP
+	,HR_Fn_KEY_BREAK
+	,HR_Fn_KEY_PRINT
+	,HR_Fn_KEY_INSERT
+	,HR_Fn_KEY_DELETE
+	,HR_Fn_KEY_HOME
+	,HR_Fn_KEY_PAGE_UP
+	,HR_Fn_KEY_PAGE_DOWN
+	,HR_Fn_KEY_ARROW_RIGHT
+	,HR_Fn_KEY_ARROW_LEFT
+	,HR_Fn_KEY_ARROW_DOWN
+	,HR_Fn_KEY_UE
+	,HR_Fn_KEY_P
+	,HR_Fn_KEY_AE
+	,HR_Fn_KEY_OE
+	,HR_Fn_KEY_MINUS
+	,HR_Fn_KEY_DOT
+	,HR_Fn_KEY_DOLLAR
+	,HR_Fn_KEY_QUESTIONMARK
+	,HR_Fn_KEY_7
+	,HR_Fn_KEY_9
+	,HR_Fn_KEY_5
+	,HR_Fn_KEY_0
+	,HR_Fn_KEY_APOS
+	,HR_Fn_KEY_6
+	,HR_Fn_KEY_8
+	,HR_Fn_KEY_4
+	,HR_Fn_KEY_EURO
+	,HR_Fn_KEY_CTRL_L
+	,HR_Fn_KEY_CTRL_R
+	,HR_Fn_KEY_O
+	,HR_Fn_KEY_ASTERISK
+	,HR_Fn_KEY_T
+	,HR_Fn_KEY_U
+	,HR_Fn_KEY_R
+	,HR_Fn_KEY_W
+	,HR_Fn_KEY_SHIFT_R
+	,HR_Fn_KEY_SHIFT_L
+	,HR_Fn_KEY_I
+	,HR_Fn_KEY_ENTER
+	,HR_Fn_KEY_H
+	,HR_Fn_KEY_Z
+	,HR_Fn_KEY_E
+	,HR_Fn_KEY_S
+	,HR_Fn_KEY_L
+	,HR_Fn_KEY_K
+	,HR_Fn_KEY_M
+	,HR_Fn_KEY_COMMA
+	,HR_Fn_KEY_SHARP
+	,HR_Fn_KEY_END
+	,HR_Fn_KEY_WIN_R
+	,HR_Fn_KEY_G
+	,HR_Fn_KEY_V
+	,HR_Fn_KEY_SPACE
+	,HR_Fn_KEY_C
+	,HR_Fn_KEY_J
+	,HR_Fn_KEY_N
+	,HR_Fn_KEY_B
+	,HR_Fn_KEY_F
+	,HR_Fn_KEY_A
+	,HR_Fn_KEY_D
+	,HR_Fn_KEY_SMALLER
+	,HR_Fn_KEY_X
+	,HR_Fn_KEY_WIN_L
+	,HR_Fn_KEY_ALT_L
+	,HR_Fn_KEY_ALT_R
+	,HR_Fn_KEY_Y
+	,HR_Fn_KEY_FN
+};
 
 const uint8_t PIN1_KEY_F11  		= 2;
 const uint8_t PIN1_KEY_F12  		= 2;
