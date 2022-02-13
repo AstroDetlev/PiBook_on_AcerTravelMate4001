@@ -35,7 +35,7 @@ c) Use the existing Touchpad (TM42PUF), PS/2 out
   It is not expected to write any code for this task. The right wiring and maybe some glue logic shall do the job.
   I've opened such a converter, and it does not contain pullup-resistors for PS/2. Need to add this to the keyboard and the touchpad.
   Check with an Oscilloskope. Compare buyed Keyboard/Mouse signals with this homemmade stuff. 
-  - ToDo: Wire Touchpad to PS/2 input of teh converter
+  - ToDo: Wire Touchpad to PS/2 input of the converter
   - ToDo: add Pullup resistor
   - ToDo: Check signals with Oscilloskope / Digital Analyser, compare with other Mouse
  
