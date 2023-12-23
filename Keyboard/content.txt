@@ -1,4 +1,6 @@
 content.txt - the file you are reading now
 keyboard.ino  - Arduino sketch for th keyboard
 ACER_TRAVELMATE4001WLMI_KEYBOARD_MATRIX.h - Keyboard matrix specific code
+PIN_ASSIGNMENTS.h - plattform specific pin mapping
+PS2_DETAILS.h - scancode related things 
 Keyboard_matrix.xlsx - The Keyboard map, as "beeped out" by hand.
