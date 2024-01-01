@@ -31,7 +31,7 @@
 /*
 KBD_DEBUG will activate the serial debug output, and as a result, mess up the timing
 */
-#define KBD_DEBUG
+ #define KBD_DEBUG
 
 #define SCANCODE_1BYTE 0x01
 #define SCANCODE_2BYTE 0x02
@@ -66,63 +66,27 @@ PS2dev keyboard(PS2_CLOCK, PS2_DATA);  //clock + data pins
 unsigned long DbgTimeCount = 0;
 unsigned long DbgTimeStart, DbgTimeEnd;
 char DbgBuf1[30];
+
+char buf1[4], buf2[4];
+char buffer[10];
+uint8_t DbgLoopStart = 0;
 #endif
+
+uint8_t LastPressedKey;
+unsigned long LastPressedKeyTimestamp;
+unsigned long KeyboardRepeatIntervalInMs = 500; //ms
 
 #define STD_KEY 0
 #define FN_COMPOSED_KEY 1
 
 
-//A list of the keyboard pins. They might not be in an unbroken row of pin numbers. Instead of an iteration over the pins, iterate over this array
-const uint8_t KeyboardPin[KBD_PINCOUNT] = {
-  KBD_MATR_PIN1,
-  KBD_MATR_PIN2,
-  KBD_MATR_PIN3,
-  KBD_MATR_PIN4,
-  KBD_MATR_PIN5,
-  KBD_MATR_PIN6,
-  KBD_MATR_PIN7,
-  KBD_MATR_PIN8,
-  KBD_MATR_PIN9,
-  KBD_MATR_PIN10,
-  KBD_MATR_PIN11,
-  KBD_MATR_PIN12,
-  KBD_MATR_PIN13,
-  KBD_MATR_PIN14,
-  KBD_MATR_PIN15,
-  KBD_MATR_PIN16,
-  KBD_MATR_PIN17,
-  KBD_MATR_PIN18,
-  KBD_MATR_PIN19,
-  KBD_MATR_PIN20,
-  KBD_MATR_PIN21,
-  KBD_MATR_PIN22,
-  KBD_MATR_PIN23,
-  KBD_MATR_PIN24
-};
-//A list of the keyboard LED pins. They might not be in an unbroken row of pin numbers.
-const uint8_t KeyboardLEDPin[KBD_LED_PINCOUNT] = {
-  KBD_LED_PIN1,
-  KBD_LED_PIN2,
-  KBD_LED_PIN3
-};
-
-//A list of the Display Control button pins. They might not be in an unbroken row of pin numbers.
-const uint8_t DisplayButtonPin[DISP_CTRL_PINCOUNT] = {
-  DISP_CTRL_PIN1,
-  DISP_CTRL_PIN2,
-  DISP_CTRL_PIN3,
-  DISP_CTRL_PIN4,
-  DISP_CTRL_PIN5
-};
 
 //This is used by DetectPressedKeys
 bool CurrentlyPressedKeys[KBD_REAL_KEY_COUNT];
 //This is for comparing
 bool PreviouslyPressedKeys[KBD_REAL_KEY_COUNT];
 
-char buf1[4], buf2[4];
-char buffer[10];
-uint8_t DbgLoopStart = 0;
+
 
 // the setup routine runs once when you press reset
 void setup() {
@@ -212,6 +176,7 @@ void loop() {
 void DetectPressedKeys() {
   uint8_t ScanIndex, ScanByteCount, VirtKeyIndex, OutPin, InPin, Ps2CodeFragment, Ps2CodeDetail;
   bool Result, FnDependend, NumLockDependend, SendMakeCode, SendBreakCode;
+  unsigned long Now;
 
   //over all keys
   for (ScanIndex = 0; ScanIndex < KBD_REAL_KEY_COUNT; ScanIndex++) {
@@ -234,17 +199,32 @@ void DetectPressedKeys() {
     SetKbdPinMode(InPin, INPUT_PULLUP);
 
     //Without a small delay, keys may be accidently reported as pressed, even without any user action.
-    delayMicroseconds(10);
+   // delayMicroseconds(10);
 
     //get the result (a bool), but invert it as a pressed key reads as a LOW from the OutPin.
     Result = !GetKbdPin(InPin);
     CurrentlyPressedKeys[ScanIndex] = Result;
+
+    if ((Result) && (LastPressedKey == ScanIndex)&& (ScanIndex != KBD_KEY_FN))
+    {
+      //A key is already pressed
+      Now = millis();
+      if ((LastPressedKeyTimestamp + KeyboardRepeatIntervalInMs) < Now)
+      {
+        //release the key to trigger it again
+        CurrentlyPressedKeys[ScanIndex] = LOW;
+      }
+    }
 
     if (PreviouslyPressedKeys[ScanIndex] != Result) {
       //There is a change in the status of this button!
       if (Result) {
         //Key is pressed, send MakeCode
         SendMakeCode = 1;
+
+        //remember the last pressed button, for repeating
+        LastPressedKey = ScanIndex;
+        LastPressedKeyTimestamp = millis();
 
       } else {
         //key is release, send BreakCode

@@ -235,6 +235,48 @@
 ******************************************************************************/ 
 
 
+//A list of the keyboard pins. They might not be in an unbroken row of pin numbers. Instead of an iteration over the pins, iterate over this array
+const uint8_t KeyboardPin[KBD_PINCOUNT] = {
+  KBD_MATR_PIN1,
+  KBD_MATR_PIN2,
+  KBD_MATR_PIN3,
+  KBD_MATR_PIN4,
+  KBD_MATR_PIN5,
+  KBD_MATR_PIN6,
+  KBD_MATR_PIN7,
+  KBD_MATR_PIN8,
+  KBD_MATR_PIN9,
+  KBD_MATR_PIN10,
+  KBD_MATR_PIN11,
+  KBD_MATR_PIN12,
+  KBD_MATR_PIN13,
+  KBD_MATR_PIN14,
+  KBD_MATR_PIN15,
+  KBD_MATR_PIN16,
+  KBD_MATR_PIN17,
+  KBD_MATR_PIN18,
+  KBD_MATR_PIN19,
+  KBD_MATR_PIN20,
+  KBD_MATR_PIN21,
+  KBD_MATR_PIN22,
+  KBD_MATR_PIN23,
+  KBD_MATR_PIN24
+};
+//A list of the keyboard LED pins. They might not be in an unbroken row of pin numbers.
+const uint8_t KeyboardLEDPin[KBD_LED_PINCOUNT] = {
+  KBD_LED_PIN1,
+  KBD_LED_PIN2,
+  KBD_LED_PIN3
+};
+
+//A list of the Display Control button pins. They might not be in an unbroken row of pin numbers.
+const uint8_t DisplayButtonPin[DISP_CTRL_PINCOUNT] = {
+  DISP_CTRL_PIN1,
+  DISP_CTRL_PIN2,
+  DISP_CTRL_PIN3,
+  DISP_CTRL_PIN4,
+  DISP_CTRL_PIN5
+};
 
 
 
