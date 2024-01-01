@@ -14,14 +14,15 @@ b) Use the existing keyboard matrix (german layout, 89 keys, curved)
   Using a bigger Arduino with many I/O to deal with the 24 matrix pins.
   Currently in use is a full size Arduino Mega2560. Maybe a miniaturized version will be the final version. UART is not needed in the final version.
   current state:
-  - Working: It detects all 89 keys (needs 24pins)
-  - Working: Temporary output of a detected key via UART (@9k6)
-  - Working: scan time is around 2,5ms. No debouncing hard- or software and no delay in use. 
-  - Working: Fn-Detection for debug out
-  - Working: key repeat
+  - Done: It detects all 89 keys (needs 24pins)
+  - Done: Temporary output of a detected key via UART (@9k6)
+  - Done: scan time for the whole keyboard is less than 3ms. No debouncing hard- or software and no delay in use. 
+  - Done: Fn-Detection for debug out
+  - Done: key repeat
   - ToDo: automatic key press acceleration
-  - ToDo: Integrate PS/2 Library for becoming a "homemade PS/2 Keyboard". 
-  - ToDo: Glue logic for PS/2 (Buffer gate, Pullup-resistors. Will need additional 2 pins)
+  - work in progress: Integrate PS/2 Library for becoming a "homemade PS/2 Keyboard".
+  - Done: Code selects the right PS/2 scan codes 
+  - work in progress: Glue logic for PS/2 (Buffer gate, Pullup-resistors. Will need additional 2 pins)
   - ToDo: Check signals with Oscilloskope / Digital Analyser, compare with other keyboard. 
   - Done: The 3 LEDs of a usual keyboard (additional 3 pins) Subject to be dropped if running out of pins on final platform.
   - ToDo: Add a photo of the layout and the wiring
