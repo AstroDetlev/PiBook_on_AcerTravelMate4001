@@ -202,9 +202,6 @@
 ******************************************************************************/ 
 
 
-	//We need as much keyboard pins as the keyboard matrix needs
-	#define KBD_PINCOUNT MATRIX_PINS_COUNT
-
 	//A keyboard uses 3 LEDs
 	#define KBD_LED_PINCOUNT 3
 	//The values that represent the LED. Used to call the function
