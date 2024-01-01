@@ -1,17 +1,16 @@
 /*
- * This file contains the macros and settings to feed the keyboard key detection part with the right details to deal
- * with the keyboard of an Acer Travelmate 4001 WLMI with german keyboard layout
- *
- * 2022-02-10 AstroDetlev
- * PiBook_on_AcerTravelMate4001
- * Target System: Teensy ++2.0 or ArduinoMega 2560
- * Arduino IDE: 2.2.1
- *
-*/
-//How many pins are ocupied by the matrix decoder
-#define KBD_PINCOUNT 24
-//How many different electrical buttons do we have
-#define KBD_REAL_KEY_COUNT 89
+ * 2021-12-01
+ * 
+ * Target System: Arduino Mega2560
+ * Arduino IDE: 1.8.14
+ * 
+*/
+
+
+#define KBD_PINCOUNT 24
+#define KBD_REAL_KEY_COUNT 89 //0 is the unknown key, the other 89 keys are known
+
+
 
 //unique names and unique numbers for all electrical buttons. Numbers are used as index to iterate over all buttons
 //They are in a useful order that allows to set ranges to iterate through
@@ -178,188 +177,508 @@
 #define KBD_VIRT_KEY_COUNT 28 //117 - 89
 
 
-//Each pressed button can be identified by electrical current that flows from one pin of the matrix pins to another pin of the matrix.
-// A pair of pins (PIN1, PIN2) describes how to identify tis button. Only the combination of PIN1,PIN2 is unique, not the PINx itself.
-#define KBD_PIN1_KEY_F11  		   2
-#define KBD_PIN1_KEY_F12  		   2
-#define KBD_PIN1_KEY_F8  			   2
-#define KBD_PIN1_KEY_Q  			   2
-#define KBD_PIN1_KEY_F4  			   2
-#define KBD_PIN1_KEY_F3  			   2
-#define KBD_PIN1_KEY_F7  			   2
-#define KBD_PIN1_KEY_1  			   2
-#define KBD_PIN1_KEY_ESC  		   1
-#define KBD_PIN1_KEY_CIRCUMFLEX  	   1
-#define KBD_PIN1_KEY_F5  			   1
-#define KBD_PIN1_KEY_TAB  		   1
-#define KBD_PIN1_KEY_F1  			   1
-#define KBD_PIN1_KEY_F2  			   1
-#define KBD_PIN1_KEY_F6  			   1
-#define KBD_PIN1_KEY_CAPS_LOCK   1
-#define KBD_PIN1_KEY_F10  		     4
-#define KBD_PIN1_KEY_F9  			     4
-#define KBD_PIN1_KEY_BACKSPACE  	 4
-#define KBD_PIN1_KEY_3  			     4
-#define KBD_PIN1_KEY_2  			     4
-#define KBD_PIN1_KEY_ARROW_UP  	   4
-#define KBD_PIN1_KEY_BREAK 		     4
-#define KBD_PIN1_KEY_PRINT  		   4
-#define KBD_PIN1_KEY_INSERT  		   3
-#define KBD_PIN1_KEY_DELETE  		   3
-#define KBD_PIN1_KEY_HOME  		     3
-#define KBD_PIN1_KEY_PAGE_UP  	   3
-#define KBD_PIN1_KEY_PAGE_DOWN  	 3
-#define KBD_PIN1_KEY_ARROW_RIGHT   3
-#define KBD_PIN1_KEY_ARROW_LEFT  	 3
-#define KBD_PIN1_KEY_ARROW_DOWN  	 3
-#define KBD_PIN1_KEY_UE  			     6
-#define KBD_PIN1_KEY_P  			     6
-#define KBD_PIN1_KEY_AE  			     6
-#define KBD_PIN1_KEY_OE  			     6
-#define KBD_PIN1_KEY_MINUS  		   6
-#define KBD_PIN1_KEY_DOT  		     6
-#define KBD_PIN1_KEY_DOLLAR  		   5
-#define KBD_PIN1_KEY_QUESTIONMARK  5
-#define KBD_PIN1_KEY_7  			     5
-#define KBD_PIN1_KEY_9  			     5
-#define KBD_PIN1_KEY_5  			     5
-#define KBD_PIN1_KEY_0  			     8
-#define KBD_PIN1_KEY_APOS  		     8
-#define KBD_PIN1_KEY_6  			     8
-#define KBD_PIN1_KEY_8  			     8
-#define KBD_PIN1_KEY_4  			     8
-#define KBD_PIN1_KEY_EURO  		     7
-#define KBD_PIN1_KEY_CTRL_L  		   10
-#define KBD_PIN1_KEY_CTRL_R  		   10
-#define KBD_PIN1_KEY_O  			     9
-#define KBD_PIN1_KEY_ASTERISK  	   9
-#define KBD_PIN1_KEY_T  			     9
-#define KBD_PIN1_KEY_U  			     9
-#define KBD_PIN1_KEY_R  			     9
-#define KBD_PIN1_KEY_W  			     9
-#define KBD_PIN1_KEY_SHIFT_R  	   12
-#define KBD_PIN1_KEY_SHIFT_L  	   12
-#define KBD_PIN1_KEY_I  			     11
-#define KBD_PIN1_KEY_ENTER  		   11
-#define KBD_PIN1_KEY_H  			     11
-#define KBD_PIN1_KEY_Z  			     11
-#define KBD_PIN1_KEY_E  			     11
-#define KBD_PIN1_KEY_S  			     11
-#define KBD_PIN1_KEY_L  			     14
-#define KBD_PIN1_KEY_K  			     14
-#define KBD_PIN1_KEY_M  			     14
-#define KBD_PIN1_KEY_COMMA  		   14
-#define KBD_PIN1_KEY_SHARP  		   13
-#define KBD_PIN1_KEY_END  		     13
-#define KBD_PIN1_KEY_WIN_R  		   13
-#define KBD_PIN1_KEY_G  			     16
-#define KBD_PIN1_KEY_V  			     16
-#define KBD_PIN1_KEY_SPACE  		   16
-#define KBD_PIN1_KEY_C  			     16
-#define KBD_PIN1_KEY_J  			     15
-#define KBD_PIN1_KEY_N  			     15
-#define KBD_PIN1_KEY_B  			     15
-#define KBD_PIN1_KEY_F  			     18
-#define KBD_PIN1_KEY_A  			     18
-#define KBD_PIN1_KEY_D  			     17
-#define KBD_PIN1_KEY_LOWER_THAN  	   17
-#define KBD_PIN1_KEY_X  			     17
-#define KBD_PIN1_KEY_WIN_L  		   20
-#define KBD_PIN1_KEY_ALT_L  		   19
-#define KBD_PIN1_KEY_ALT_R  		   19
-#define KBD_PIN1_KEY_Y  			     22
-#define KBD_PIN1_KEY_FN  			     21
-#define KBD_PIN2_KEY_F11  		 5
-#define KBD_PIN2_KEY_F12  		 8
-#define KBD_PIN2_KEY_F8  			 9
-#define KBD_PIN2_KEY_Q  			 11
-#define KBD_PIN2_KEY_F4  			 18
-#define KBD_PIN2_KEY_F3  			 22
-#define KBD_PIN2_KEY_F7  			 24
-#define KBD_PIN2_KEY_1  			 23
-#define KBD_PIN2_KEY_ESC        5
-#define KBD_PIN2_KEY_CIRCUMFLEX  	  8
-#define KBD_PIN2_KEY_F5  			  9
-#define KBD_PIN2_KEY_TAB  		  11
-#define KBD_PIN2_KEY_F1  			  18
-#define KBD_PIN2_KEY_F2  			  22
-#define KBD_PIN2_KEY_F6  			  24
-#define KBD_PIN2_KEY_CAPS_LOCK  23
-#define KBD_PIN2_KEY_F10        5
-#define KBD_PIN2_KEY_F9  			  8
-#define KBD_PIN2_KEY_BACKSPACE  9
-#define KBD_PIN2_KEY_3  			  11
-#define KBD_PIN2_KEY_2  			  18
-#define KBD_PIN2_KEY_ARROW_UP  	22
-#define KBD_PIN2_KEY_BREAK 		  24
-#define KBD_PIN2_KEY_PRINT  		23
-#define KBD_PIN2_KEY_INSERT  		5
-#define KBD_PIN2_KEY_DELETE  		8
-#define KBD_PIN2_KEY_HOME  		  9
-#define KBD_PIN2_KEY_PAGE_UP  	11
-#define KBD_PIN2_KEY_PAGE_DOWN  18
-#define KBD_PIN2_KEY_ARROW_RIGHT   22
-#define KBD_PIN2_KEY_ARROW_LEFT  	 24
-#define KBD_PIN2_KEY_ARROW_DOWN  	 23
-#define KBD_PIN2_KEY_UE  			  5
-#define KBD_PIN2_KEY_P  			  8
-#define KBD_PIN2_KEY_AE  			  9
-#define KBD_PIN2_KEY_OE  			  11
-#define KBD_PIN2_KEY_MINUS      18
-#define KBD_PIN2_KEY_DOT  		  22
-#define KBD_PIN2_KEY_DOLLAR  		    10
-#define KBD_PIN2_KEY_QUESTIONMARK   14
-#define KBD_PIN2_KEY_7  			      16
-#define KBD_PIN2_KEY_9  			      15
-#define KBD_PIN2_KEY_5  			      17
-#define KBD_PIN2_KEY_0  			 14
-#define KBD_PIN2_KEY_APOS  		 13
-#define KBD_PIN2_KEY_6  			 16
-#define KBD_PIN2_KEY_8  			 15
-#define KBD_PIN2_KEY_4  			 17
-#define KBD_PIN2_KEY_EURO  		  18
-#define KBD_PIN2_KEY_CTRL_L  	  22
-#define KBD_PIN2_KEY_CTRL_R  		24
-#define KBD_PIN2_KEY_O  			  14
-#define KBD_PIN2_KEY_ASTERISK  	13
-#define KBD_PIN2_KEY_T  			  16
-#define KBD_PIN2_KEY_U  			  15
-#define KBD_PIN2_KEY_R  			  17
-#define KBD_PIN2_KEY_W  			  21
-#define KBD_PIN2_KEY_SHIFT_R  	18
-#define KBD_PIN2_KEY_SHIFT_L  	22
-#define KBD_PIN2_KEY_I  			  14
-#define KBD_PIN2_KEY_ENTER  		13
-#define KBD_PIN2_KEY_H  			  16
-#define KBD_PIN2_KEY_Z  			  15
-#define KBD_PIN2_KEY_E  			  17
-#define KBD_PIN2_KEY_S  			  21
-#define KBD_PIN2_KEY_L  			  18
-#define KBD_PIN2_KEY_K  			  22
-#define KBD_PIN2_KEY_M  			  24
-#define KBD_PIN2_KEY_COMMA  		23
-#define KBD_PIN2_KEY_SHARP  		18
-#define KBD_PIN2_KEY_END  		  22
-#define KBD_PIN2_KEY_WIN_R  		24
-#define KBD_PIN2_KEY_G  			  18
-#define KBD_PIN2_KEY_V  			  22
-#define KBD_PIN2_KEY_SPACE  		24
-#define KBD_PIN2_KEY_C  			  23
-#define KBD_PIN2_KEY_J  			  18
-#define KBD_PIN2_KEY_N  			  22
-#define KBD_PIN2_KEY_B  			  23
-#define KBD_PIN2_KEY_F  			  17
-#define KBD_PIN2_KEY_A  			  21
-#define KBD_PIN2_KEY_D  			  22
-#define KBD_PIN2_KEY_LOWER_THAN  	24
-#define KBD_PIN2_KEY_X  			  23
-#define KBD_PIN2_KEY_WIN_L  		24
-#define KBD_PIN2_KEY_ALT_L  		24
-#define KBD_PIN2_KEY_ALT_R  		23
-#define KBD_PIN2_KEY_Y  			  21
-#define KBD_PIN2_KEY_FN  			  24
+const char PROGMEM HR_KEY_F11[] =      			"F11"                 ;
+const char PROGMEM HR_KEY_F12[] =      			"F12"                 ;
+const char PROGMEM HR_KEY_F8[] =       			"F8"                  ;
+const char PROGMEM HR_KEY_Q[] =      				"Q"               ;
+const char PROGMEM HR_KEY_F4[] =       			"F4"                  ;
+const char PROGMEM HR_KEY_F3[] =       			"F3"                  ;
+const char PROGMEM HR_KEY_F7[] =       			"F7"                  ;
+const char PROGMEM HR_KEY_1[] =      				"1"               ;
+const char PROGMEM HR_KEY_ESC[] =      			"ESC"                 ;
+const char PROGMEM HR_KEY_CIRCUMFLEX[] =       			"^"               ;
+const char PROGMEM HR_KEY_F5[] =       			"F5"                  ;
+const char PROGMEM HR_KEY_TAB[] =      			"Tab"                 ;
+const char PROGMEM HR_KEY_F1[] =       			"F1"                  ;
+const char PROGMEM HR_KEY_F2[] =       			"F2"                  ;
+const char PROGMEM HR_KEY_F6[] =       			"F6"                  ;
+const char PROGMEM HR_KEY_CAPS_LOCK[] =   			"CAPS_LOCK"       ;
+const char PROGMEM HR_KEY_F10[] =      			"F10"                 ;
+const char PROGMEM HR_KEY_F9[] =       			"F9"                  ;
+const char PROGMEM HR_KEY_BACKSPACE[] =  			"BackSpace"       ;
+const char PROGMEM HR_KEY_3[] =      				"3"               ;
+const char PROGMEM HR_KEY_2[] =      				"2"               ;
+const char PROGMEM HR_KEY_ARROW_UP[] =       		"Up"              ;
+const char PROGMEM HR_KEY_BREAK[] =      			"Break"           ;
+const char PROGMEM HR_KEY_PRINT[] =      			"Print"           ;
+const char PROGMEM HR_KEY_INSERT[] =      			"Insert"          ;
+const char PROGMEM HR_KEY_DELETE[] =      			"Delete"          ;
+const char PROGMEM HR_KEY_HOME[] =     			"Pos1"                ;
+const char PROGMEM HR_KEY_PAGE_UP[] =     			"PAGE_UP"         ;
+const char PROGMEM HR_KEY_PAGE_DOWN[] =   			"PAGE_DOWN"       ;
+const char PROGMEM HR_KEY_ARROW_RIGHT[] =      	"Right"               ;
+const char PROGMEM HR_KEY_ARROW_LEFT[] =      		"Left"            ;
+const char PROGMEM HR_KEY_ARROW_DOWN[] =      		"Down"            ;
+const char PROGMEM HR_KEY_UE[] =       			"Ü"                   ;
+const char PROGMEM HR_KEY_P[] =      				"P"               ;
+const char PROGMEM HR_KEY_AE[] =       			"Ä"                   ;
+const char PROGMEM HR_KEY_OE[] =       			"Ö"                   ;
+const char PROGMEM HR_KEY_MINUS[] =    			"-"                   ;
+const char PROGMEM HR_KEY_DOT[] =    				"."               ;
+const char PROGMEM HR_KEY_DOLLAR[] =     			"$"               ;
+const char PROGMEM HR_KEY_QUESTIONMARK[] =       	"?"               ;
+const char PROGMEM HR_KEY_7[] =      				"7"               ;
+const char PROGMEM HR_KEY_9[] =      				"9"               ;
+const char PROGMEM HR_KEY_5[] =      				"5"               ;
+const char PROGMEM HR_KEY_0[] =      				"0"               ;
+const char PROGMEM HR_KEY_APOS[] =     			"'"                   ;
+const char PROGMEM HR_KEY_6[] =      				"6"               ;
+const char PROGMEM HR_KEY_8[] =      				"8"               ;
+const char PROGMEM HR_KEY_4[] =      				"4"               ;
+const char PROGMEM HR_KEY_EURO[] =     			"€"                   ;
+const char PROGMEM HR_KEY_CTRL_L[] =      			"Ctrl-L"          ;
+const char PROGMEM HR_KEY_CTRL_R[] =      			"Ctrl-R"          ;
+const char PROGMEM HR_KEY_O[] =      				"O"               ;
+const char PROGMEM HR_KEY_ASTERISK[] =   			"*"               ;
+const char PROGMEM HR_KEY_T[] =      				"T"               ;
+const char PROGMEM HR_KEY_U[] =      				"U"               ;
+const char PROGMEM HR_KEY_R[] =      				"R"               ;
+const char PROGMEM HR_KEY_W[] =      				"W"               ;
+const char PROGMEM HR_KEY_SHIFT_R[] =      		"Shift-R"             ;
+const char PROGMEM HR_KEY_SHIFT_L[] =      		"Shift-L"             ;
+const char PROGMEM HR_KEY_I[] =      				"I"               ;
+const char PROGMEM HR_KEY_ENTER[] =      			"Enter"           ;
+const char PROGMEM HR_KEY_H[] =      				"H"               ;
+const char PROGMEM HR_KEY_Z[] =      				"Z"               ;
+const char PROGMEM HR_KEY_E[] =      				"E"               ;
+const char PROGMEM HR_KEY_S[] =      				"S"               ;
+const char PROGMEM HR_KEY_L[] =      				"L"               ;
+const char PROGMEM HR_KEY_K[] =      				"K"               ;
+const char PROGMEM HR_KEY_M[] =      				"M"               ;
+const char PROGMEM HR_KEY_COMMA[] =  				","               ;
+const char PROGMEM HR_KEY_SHARP[] =    			"#"                   ;
+const char PROGMEM HR_KEY_END[] =      			"End"                 ;
+const char PROGMEM HR_KEY_WIN_R[] =      			"Win-R"           ;
+const char PROGMEM HR_KEY_G[] =      				"G"               ;
+const char PROGMEM HR_KEY_V[] =      				"V"               ;
+const char PROGMEM HR_KEY_SPACE[] =      			"Space"           ;
+const char PROGMEM HR_KEY_C[] =     				"C"               ;
+const char PROGMEM HR_KEY_J[] =      				"J"               ;
+const char PROGMEM HR_KEY_N[] =      				"N"               ;
+const char PROGMEM HR_KEY_B[] =      				"B"               ;
+const char PROGMEM HR_KEY_F[] =      				"F"               ;
+const char PROGMEM HR_KEY_A[] =      				"A"               ;
+const char PROGMEM HR_KEY_D[] =      				"D"               ;
+const char PROGMEM HR_KEY_LOWER_THAN[] =    			"<"               ;
+const char PROGMEM HR_KEY_X[] =      				"X"               ;
+const char PROGMEM HR_KEY_WIN_L[] =      			"Win-L"           ;
+const char PROGMEM HR_KEY_ALT_L[] =      			"Alt"             ;
+const char PROGMEM HR_KEY_ALT_R[] =      			"AltGr"           ;
+const char PROGMEM HR_KEY_Y[] =     				"Y"               ;
+const char PROGMEM HR_KEY_FN[] =       			"Fn"                  ;
 
-struct DetectPins
+
+  /*This is the array that in a way holds the labels of the Keys. If you got the cell content from the Matrix, this is the transformation to a human readable string, just to see
+    the keyboard decoder is doing the right things and the wiring is ok.  
+  */
+const char* const HumanReadableDecoder[KBD_REAL_KEY_COUNT] PROGMEM =
+{
+HR_KEY_FN   		
+,HR_KEY_F2  		
+,HR_KEY_F3  		
+,HR_KEY_F4  		
+,HR_KEY_F5  		
+,HR_KEY_F6  		
+,HR_KEY_F7  		
+,HR_KEY_F8  		
+,HR_KEY_ARROW_RIGHT 
+,HR_KEY_ARROW_LEFT  
+,HR_KEY_ARROW_DOWN 	
+,HR_KEY_ARROW_UP  	
+,HR_KEY_F11 		
+,HR_KEY_F12 		
+,HR_KEY_7  			
+,HR_KEY_9 			
+,HR_KEY_8  			
+,HR_KEY_0  			
+,HR_KEY_U  			
+,HR_KEY_I  			
+,HR_KEY_O  			
+,HR_KEY_P  			
+,HR_KEY_J  			
+,HR_KEY_K  			
+,HR_KEY_L  			
+,HR_KEY_OE   		
+,HR_KEY_M  			
+,HR_KEY_DOT  		
+,HR_KEY_MINUS  		
+,HR_KEY_CAPS_LOCK 	
+,HR_KEY_CTRL_L  	
+,HR_KEY_CTRL_R  	
+,HR_KEY_ALT_L  		
+,HR_KEY_ALT_R  		
+,HR_KEY_SHIFT_L  	
+,HR_KEY_SHIFT_R  	
+,HR_KEY_WIN_L  		
+,HR_KEY_WIN_R  		
+,HR_KEY_F1  		
+,HR_KEY_F9  		
+,HR_KEY_F10 		
+,HR_KEY_Q 			
+,HR_KEY_1 			
+,HR_KEY_ESC			
+,HR_KEY_CIRCUMFLEX  
+,HR_KEY_TAB 		
+,HR_KEY_BACKSPACE 	
+,HR_KEY_3  			
+,HR_KEY_2  			
+,HR_KEY_INSERT  	
+,HR_KEY_DELETE  	
+,HR_KEY_HOME 		
+,HR_KEY_PAGE_UP 	
+,HR_KEY_PAGE_DOWN  	
+,HR_KEY_UE  		
+,HR_KEY_AE  		
+,HR_KEY_QUESTIONMARK
+,HR_KEY_5  			
+,HR_KEY_APOS  		
+,HR_KEY_6  			
+,HR_KEY_4  			
+,HR_KEY_ASTERISK   	
+,HR_KEY_T 			
+,HR_KEY_R  			
+,HR_KEY_W  			
+,HR_KEY_ENTER  		
+,HR_KEY_H  			
+,HR_KEY_Z  			
+,HR_KEY_E  			
+,HR_KEY_S  			
+,HR_KEY_COMMA  		
+,HR_KEY_SHARP  		
+,HR_KEY_END  		
+,HR_KEY_G  			
+,HR_KEY_V  			
+,HR_KEY_SPACE  		
+,HR_KEY_C  			
+,HR_KEY_N  			
+,HR_KEY_B  			
+,HR_KEY_F  			
+,HR_KEY_A  			
+,HR_KEY_D  			
+,HR_KEY_LOWER_THAN  
+,HR_KEY_X  			
+,HR_KEY_Y  			
+,HR_KEY_PRINT  		
+,HR_KEY_BREAK 		
+,HR_KEY_DOLLAR   	
+,HR_KEY_EURO
+};
+
+
+const uint8_t KBD_PIN1_KEY_F11  		= 2;
+const uint8_t KBD_PIN1_KEY_F12  		= 2;
+const uint8_t KBD_PIN1_KEY_F8  			= 2;
+const uint8_t KBD_PIN1_KEY_Q  			= 2;
+const uint8_t KBD_PIN1_KEY_F4  			= 2;
+const uint8_t KBD_PIN1_KEY_F3  			= 2;
+const uint8_t KBD_PIN1_KEY_F7  			= 2;
+const uint8_t KBD_PIN1_KEY_1  			= 2;
+
+const uint8_t KBD_PIN1_KEY_ESC  		= 1;
+const uint8_t KBD_PIN1_KEY_CIRCUMFLEX  		= 1;
+const uint8_t KBD_PIN1_KEY_F5  			= 1;
+const uint8_t KBD_PIN1_KEY_TAB  		= 1;
+const uint8_t KBD_PIN1_KEY_F1  			= 1;
+const uint8_t KBD_PIN1_KEY_F2  			= 1;
+const uint8_t KBD_PIN1_KEY_F6  			= 1;
+const uint8_t KBD_PIN1_KEY_CAPS_LOCK  	= 1;
+
+const uint8_t KBD_PIN1_KEY_F10  		= 4;
+const uint8_t KBD_PIN1_KEY_F9  			= 4;
+const uint8_t KBD_PIN1_KEY_BACKSPACE  	= 4;
+const uint8_t KBD_PIN1_KEY_3  			= 4;
+const uint8_t KBD_PIN1_KEY_2  			= 4;
+const uint8_t KBD_PIN1_KEY_ARROW_UP  	= 4;
+const uint8_t KBD_PIN1_KEY_BREAK 		= 4;
+const uint8_t KBD_PIN1_KEY_PRINT  		= 4;
+
+const uint8_t KBD_PIN1_KEY_INSERT  		= 3;
+const uint8_t KBD_PIN1_KEY_DELETE  		= 3;
+const uint8_t KBD_PIN1_KEY_HOME  		= 3;
+const uint8_t KBD_PIN1_KEY_PAGE_UP  	= 3;
+const uint8_t KBD_PIN1_KEY_PAGE_DOWN  	= 3;
+const uint8_t KBD_PIN1_KEY_ARROW_RIGHT  = 3;
+const uint8_t KBD_PIN1_KEY_ARROW_LEFT  	= 3;
+const uint8_t KBD_PIN1_KEY_ARROW_DOWN  	= 3;
+
+const uint8_t KBD_PIN1_KEY_UE  			= 6;
+const uint8_t KBD_PIN1_KEY_P  			= 6;
+const uint8_t KBD_PIN1_KEY_AE  			= 6;
+const uint8_t KBD_PIN1_KEY_OE  			= 6;
+const uint8_t KBD_PIN1_KEY_MINUS  		= 6;
+const uint8_t KBD_PIN1_KEY_DOT  		= 6;
+
+const uint8_t KBD_PIN1_KEY_DOLLAR  		= 5;
+const uint8_t KBD_PIN1_KEY_QUESTIONMARK = 5;
+const uint8_t KBD_PIN1_KEY_7  			= 5;
+const uint8_t KBD_PIN1_KEY_9  			= 5;
+const uint8_t KBD_PIN1_KEY_5  			= 5;
+
+const uint8_t KBD_PIN1_KEY_0  			= 8;
+const uint8_t KBD_PIN1_KEY_APOS  		= 8;
+const uint8_t KBD_PIN1_KEY_6  			= 8;
+const uint8_t KBD_PIN1_KEY_8  			= 8;
+const uint8_t KBD_PIN1_KEY_4  			= 8;
+
+const uint8_t KBD_PIN1_KEY_EURO  		= 7;
+
+const uint8_t KBD_PIN1_KEY_CTRL_L  		= 10;
+const uint8_t KBD_PIN1_KEY_CTRL_R  		= 10;
+
+const uint8_t KBD_PIN1_KEY_O  			= 9;
+const uint8_t KBD_PIN1_KEY_ASTERISK  	= 9;
+const uint8_t KBD_PIN1_KEY_T  			= 9;
+const uint8_t KBD_PIN1_KEY_U  			= 9;
+const uint8_t KBD_PIN1_KEY_R  			= 9;
+const uint8_t KBD_PIN1_KEY_W  			= 9;
+
+const uint8_t KBD_PIN1_KEY_SHIFT_R  	= 12;
+const uint8_t KBD_PIN1_KEY_SHIFT_L  	= 12;
+
+const uint8_t KBD_PIN1_KEY_I  			= 11;
+const uint8_t KBD_PIN1_KEY_ENTER  		= 11;
+const uint8_t KBD_PIN1_KEY_H  			= 11;
+const uint8_t KBD_PIN1_KEY_Z  			= 11;
+const uint8_t KBD_PIN1_KEY_E  			= 11;
+const uint8_t KBD_PIN1_KEY_S  			= 11;
+
+const uint8_t KBD_PIN1_KEY_L  			= 14;
+const uint8_t KBD_PIN1_KEY_K  			= 14;
+const uint8_t KBD_PIN1_KEY_M  			= 14;
+const uint8_t KBD_PIN1_KEY_COMMA  		= 14;
+
+const uint8_t KBD_PIN1_KEY_SHARP  		= 13;
+const uint8_t KBD_PIN1_KEY_END  		= 13;
+const uint8_t KBD_PIN1_KEY_WIN_R  		= 13;
+
+const uint8_t KBD_PIN1_KEY_G  			= 16;
+const uint8_t KBD_PIN1_KEY_V  			= 16;
+const uint8_t KBD_PIN1_KEY_SPACE  		= 16;
+const uint8_t KBD_PIN1_KEY_C  			= 16;
+
+const uint8_t KBD_PIN1_KEY_J  			= 15;
+const uint8_t KBD_PIN1_KEY_N  			= 15;
+const uint8_t KBD_PIN1_KEY_B  			= 15;
+
+const uint8_t KBD_PIN1_KEY_F  			= 18;
+const uint8_t KBD_PIN1_KEY_A  			= 18;
+
+const uint8_t KBD_PIN1_KEY_D  			= 17;
+const uint8_t KBD_PIN1_KEY_LOWER_THAN  	= 17;
+const uint8_t KBD_PIN1_KEY_X  			= 17;
+
+const uint8_t KBD_PIN1_KEY_WIN_L  		= 20;
+
+const uint8_t KBD_PIN1_KEY_ALT_L  		= 19;
+const uint8_t KBD_PIN1_KEY_ALT_R  		= 19;
+
+const uint8_t KBD_PIN1_KEY_Y  			= 22;
+
+const uint8_t KBD_PIN1_KEY_FN  			= 21;
+
+
+const uint8_t KBD_PIN2_KEY_F11  		= 5;  
+const uint8_t KBD_PIN2_KEY_F12  		= 8; 
+const uint8_t KBD_PIN2_KEY_F8  			= 9; 
+const uint8_t KBD_PIN2_KEY_Q  			= 11; 
+const uint8_t KBD_PIN2_KEY_F4  			= 18; 
+const uint8_t KBD_PIN2_KEY_F3  			= 22; 
+const uint8_t KBD_PIN2_KEY_F7  			= 24; 
+const uint8_t KBD_PIN2_KEY_1  			= 23;
+ 
+const uint8_t KBD_PIN2_KEY_ESC  		= 5;  
+const uint8_t KBD_PIN2_KEY_CIRCUMFLEX  		= 8;  
+const uint8_t KBD_PIN2_KEY_F5  			= 9; 
+const uint8_t KBD_PIN2_KEY_TAB  		= 11;
+const uint8_t KBD_PIN2_KEY_F1  			= 18;
+const uint8_t KBD_PIN2_KEY_F2  			= 22;
+const uint8_t KBD_PIN2_KEY_F6  			= 24;
+const uint8_t KBD_PIN2_KEY_CAPS_LOCK  	= 23;
+
+const uint8_t KBD_PIN2_KEY_F10  		= 5 ;
+const uint8_t KBD_PIN2_KEY_F9  			= 8 ;
+const uint8_t KBD_PIN2_KEY_BACKSPACE  	= 9;
+const uint8_t KBD_PIN2_KEY_3  			= 11;
+const uint8_t KBD_PIN2_KEY_2  			= 18;
+const uint8_t KBD_PIN2_KEY_ARROW_UP  	= 22;
+const uint8_t KBD_PIN2_KEY_BREAK 		= 24;
+const uint8_t KBD_PIN2_KEY_PRINT  		= 23;
+
+const uint8_t KBD_PIN2_KEY_INSERT  		= 5 ;
+const uint8_t KBD_PIN2_KEY_DELETE  		= 8 ;
+const uint8_t KBD_PIN2_KEY_HOME  		= 9;
+const uint8_t KBD_PIN2_KEY_PAGE_UP  	= 11;
+const uint8_t KBD_PIN2_KEY_PAGE_DOWN  	= 18;
+const uint8_t KBD_PIN2_KEY_ARROW_RIGHT  = 22;
+const uint8_t KBD_PIN2_KEY_ARROW_LEFT  	= 24;
+const uint8_t KBD_PIN2_KEY_ARROW_DOWN  	= 23;
+
+const uint8_t KBD_PIN2_KEY_UE  			= 5 ;
+const uint8_t KBD_PIN2_KEY_P  			= 8 ;
+const uint8_t KBD_PIN2_KEY_AE  			= 9	;
+const uint8_t KBD_PIN2_KEY_OE  			= 11;
+const uint8_t KBD_PIN2_KEY_MINUS  		= 18;
+const uint8_t KBD_PIN2_KEY_DOT  		= 22;
+
+const uint8_t KBD_PIN2_KEY_DOLLAR  		= 10;
+const uint8_t KBD_PIN2_KEY_QUESTIONMARK = 14;
+const uint8_t KBD_PIN2_KEY_7  			= 16;
+const uint8_t KBD_PIN2_KEY_9  			= 15;
+const uint8_t KBD_PIN2_KEY_5  			= 17;
+
+const uint8_t KBD_PIN2_KEY_0  			= 14;
+const uint8_t KBD_PIN2_KEY_APOS  		= 13;
+const uint8_t KBD_PIN2_KEY_6  			= 16;
+const uint8_t KBD_PIN2_KEY_8  			= 15;
+const uint8_t KBD_PIN2_KEY_4  			= 17;
+
+const uint8_t KBD_PIN2_KEY_EURO  		= 18;
+const uint8_t KBD_PIN2_KEY_CTRL_L  		= 22;
+const uint8_t KBD_PIN2_KEY_CTRL_R  		= 24;
+
+const uint8_t KBD_PIN2_KEY_O  			= 14;
+const uint8_t KBD_PIN2_KEY_ASTERISK  	= 13;
+const uint8_t KBD_PIN2_KEY_T  			= 16;
+const uint8_t KBD_PIN2_KEY_U  			= 15;
+const uint8_t KBD_PIN2_KEY_R  			= 17;
+const uint8_t KBD_PIN2_KEY_W  			= 21;
+
+const uint8_t KBD_PIN2_KEY_SHIFT_R  	= 18;
+const uint8_t KBD_PIN2_KEY_SHIFT_L  	= 22;
+
+const uint8_t KBD_PIN2_KEY_I  			= 14;
+const uint8_t KBD_PIN2_KEY_ENTER  		= 13;
+const uint8_t KBD_PIN2_KEY_H  			= 16;
+const uint8_t KBD_PIN2_KEY_Z  			= 15;
+const uint8_t KBD_PIN2_KEY_E  			= 17;
+const uint8_t KBD_PIN2_KEY_S  			= 21;
+
+const uint8_t KBD_PIN2_KEY_L  			= 18;
+const uint8_t KBD_PIN2_KEY_K  			= 22;
+const uint8_t KBD_PIN2_KEY_M  			= 24;
+const uint8_t KBD_PIN2_KEY_COMMA  		= 23;
+
+const uint8_t KBD_PIN2_KEY_SHARP  		= 18;
+const uint8_t KBD_PIN2_KEY_END  		= 22;
+const uint8_t KBD_PIN2_KEY_WIN_R  		= 24;
+
+const uint8_t KBD_PIN2_KEY_G  			= 18;
+const uint8_t KBD_PIN2_KEY_V  			= 22;
+const uint8_t KBD_PIN2_KEY_SPACE  		= 24;
+const uint8_t KBD_PIN2_KEY_C  			= 23;
+
+const uint8_t KBD_PIN2_KEY_J  			= 18;
+const uint8_t KBD_PIN2_KEY_N  			= 22;
+const uint8_t KBD_PIN2_KEY_B  			= 23;
+
+const uint8_t KBD_PIN2_KEY_F  			= 17;
+const uint8_t KBD_PIN2_KEY_A  			= 21;
+
+const uint8_t KBD_PIN2_KEY_D  			= 22;
+const uint8_t KBD_PIN2_KEY_LOWER_THAN  	= 24;
+const uint8_t KBD_PIN2_KEY_X  			= 23;
+
+const uint8_t KBD_PIN2_KEY_WIN_L  		= 24;
+
+const uint8_t KBD_PIN2_KEY_ALT_L  		= 24;
+const uint8_t KBD_PIN2_KEY_ALT_R  		= 23;
+
+const uint8_t KBD_PIN2_KEY_Y  			= 21;
+const uint8_t KBD_PIN2_KEY_FN  			= 24;
+
+
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_F11  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_F12  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_F8  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_Q  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_F4  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_F3  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_F7  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_1  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_ESC  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_CIRCUMFLEX  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_F5  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_TAB  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_F1  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_F2  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_F6  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_CAPS_LOCK  	= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_F10  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_F9  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_BACKSPACE  	= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_3  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_2  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_ARROW_UP  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_BREAK 			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_PRINT  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_INSERT  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_DELETE  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_HOME  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_PAGE_UP  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_PAGE_DOWN  	= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_ARROW_RIGHT  	= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_ARROW_LEFT  	= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_ARROW_DOWN  	= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_UE  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_P  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_AE  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_OE  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_MINUS  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_DOT  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_DOLLAR  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_QUESTIONMARK  	= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_7  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_9  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_5  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_0  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_APOS  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_6  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_8  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_4  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_EURO  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_CTRL_L  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_CTRL_R  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_O  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_ASTERISK  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_T  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_U  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_R  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_W  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_SHIFT_R  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_SHIFT_L  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_I  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_ENTER  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_H  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_Z  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_E  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_S  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_L  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_K  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_M  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_COMMA  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_SHARP  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_END  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_WIN_R  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_G  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_V  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_SPACE  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_C  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_J  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_N  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_B  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_F  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_A  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_D  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_LOWER_THAN  		= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_X  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_WIN_L 			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_ALT_L 			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_ALT_R 			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_Y  			= 1;
+const uint8_t PS2_MAKEBYTE_COUNT_KEY_FN  			= 1;
+
+
+struct detect_pins
 {
   uint8_t Pin1;
   uint8_t Pin2;
@@ -367,9 +686,7 @@ struct DetectPins
 
 
 
-
-//An array of pairs of pins. The order here is the same as for the array of buttons. Not for virtual keys!
-const DetectPins MatrixPins[KBD_REAL_KEY_COUNT] =
+const detect_pins MatrixPins[KBD_REAL_KEY_COUNT] =
 {
 	{KBD_PIN1_KEY_FN               ,KBD_PIN2_KEY_FN                 },
 	{KBD_PIN1_KEY_F2               ,KBD_PIN2_KEY_F2                 },
@@ -460,7 +777,8 @@ const DetectPins MatrixPins[KBD_REAL_KEY_COUNT] =
 	{KBD_PIN1_KEY_BREAK            ,KBD_PIN2_KEY_BREAK              },
 	{KBD_PIN1_KEY_DOLLAR           ,KBD_PIN2_KEY_DOLLAR             },
 	{KBD_PIN1_KEY_EURO             ,KBD_PIN2_KEY_EURO               }
-};
+};		
+
 
 /*
 Now the dealing with the PS/2 protocol
@@ -645,10 +963,7 @@ struct KbdPs2ScanCodeDetails
  Ps2MakeBc_##NAME,\
  Ps2Make_##NAME
  
- /*,\
-Ps2BreakBc_##NAME,\
-   Ps2Make_##NAME,\
-  Ps2Break_##NAME*/
+ 
   
 //The full feateared list of PS code details, same order as for finding the buttons, but extended with virtual keys
 const KbdPs2ScanCodeDetails  Ps2CodeCombo[KBD_REAL_KEY_COUNT + KBD_VIRT_KEY_COUNT] =

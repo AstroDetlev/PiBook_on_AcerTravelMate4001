@@ -2,7 +2,7 @@
 /*
   PiBook_on_AcerTravelMate4001 
   
-  AstroDetlev 2020
+  AstroDetlev 2023
 
   This is the Main file for a Laptop Keyboard Matrix used as PS/2 Keyboard for a homemade Pibook
   It deals with the pressed buttons, interacts with the PS/2 Interface and also emulates some buttons
@@ -31,18 +31,18 @@
 /*
 KBD_DEBUG will activate the serial debug output, and as a result, mess up the timing
 */
-#define KBD_DEBUG 
+#define KBD_DEBUG
 
-#define SCANCODE_1BYTE   0x01
-#define SCANCODE_2BYTE   0x02
+#define SCANCODE_1BYTE 0x01
+#define SCANCODE_2BYTE 0x02
 
-#define SCANID_MK_STD   0x01
-#define SCANID_MK_SPCL  0x02
+#define SCANID_MK_STD 0x01
+#define SCANID_MK_SPCL 0x02
 #define SCANID_MK_PRINT 0x04
 #define SCANID_MK_BREAK 0x08
 
-#define SCANID_BK_STD   0x81
-#define SCANID_BK_SPCL  0x82
+#define SCANID_BK_STD 0x81
+#define SCANID_BK_SPCL 0x82
 #define SCANID_BK_PRINT 0x84
 #define SCANID_DUMMY 0x00
 
@@ -55,398 +55,309 @@ KBD_DEBUG will activate the serial debug output, and as a result, mess up the ti
 //This is the file to describe which pins of the development board are used.
 #include "PIN_ASSIGNMENTS.h"
 
-//Library to emulate a PS/2 device. Written for keyboards with US layout. 
+//Library to emulate a PS/2 device. Written for keyboards with US layout.
 //Provided enums ScanCodes/SpecialScanCodes do not match outside US. Doesn't matter, we have these numbers
 #include <ps2dev.h>
 PS2dev keyboard(PS2_CLOCK, PS2_DATA);  //clock + data pins
 
-
 #define TestDelayMs 50
 
 #ifdef KBD_DEBUG
-  unsigned long DbgTimeCount = 0;
-  unsigned long DbgTimeStart, DbgTimeEnd;
-  char DbgBuf1[30];
+unsigned long DbgTimeCount = 0;
+unsigned long DbgTimeStart, DbgTimeEnd;
+char DbgBuf1[30];
 #endif
 
 #define STD_KEY 0
 #define FN_COMPOSED_KEY 1
 
-//A list of the keyboard pins. They might not be in an unbroken row of pin numbers. Instead of an iteration over the pins, iterate over this array
-const uint8_t KeyboardPin[KBD_PINCOUNT] = 
-{
-	KBD_MATR_PIN1,
-	KBD_MATR_PIN2,
-	KBD_MATR_PIN3,
-	KBD_MATR_PIN4,
-	KBD_MATR_PIN5,
-	KBD_MATR_PIN6,
-	KBD_MATR_PIN7,
-	KBD_MATR_PIN8,
-	KBD_MATR_PIN9,
-	KBD_MATR_PIN10,
-	KBD_MATR_PIN11,
-	KBD_MATR_PIN12,
-	KBD_MATR_PIN13,
-	KBD_MATR_PIN14,
-	KBD_MATR_PIN15,
-	KBD_MATR_PIN16,
-	KBD_MATR_PIN17,
-	KBD_MATR_PIN18,
-	KBD_MATR_PIN19,
-	KBD_MATR_PIN20,
-	KBD_MATR_PIN21,
-	KBD_MATR_PIN22,
-	KBD_MATR_PIN23,
-	KBD_MATR_PIN24
-};
 
+//A list of the keyboard pins. They might not be in an unbroken row of pin numbers. Instead of an iteration over the pins, iterate over this array
+const uint8_t KeyboardPin[KBD_PINCOUNT] = {
+  KBD_MATR_PIN1,
+  KBD_MATR_PIN2,
+  KBD_MATR_PIN3,
+  KBD_MATR_PIN4,
+  KBD_MATR_PIN5,
+  KBD_MATR_PIN6,
+  KBD_MATR_PIN7,
+  KBD_MATR_PIN8,
+  KBD_MATR_PIN9,
+  KBD_MATR_PIN10,
+  KBD_MATR_PIN11,
+  KBD_MATR_PIN12,
+  KBD_MATR_PIN13,
+  KBD_MATR_PIN14,
+  KBD_MATR_PIN15,
+  KBD_MATR_PIN16,
+  KBD_MATR_PIN17,
+  KBD_MATR_PIN18,
+  KBD_MATR_PIN19,
+  KBD_MATR_PIN20,
+  KBD_MATR_PIN21,
+  KBD_MATR_PIN22,
+  KBD_MATR_PIN23,
+  KBD_MATR_PIN24
+};
 //A list of the keyboard LED pins. They might not be in an unbroken row of pin numbers.
-const uint8_t KeyboardLEDPin[KBD_LED_PINCOUNT] =
-{
-	KBD_LED_PIN1,
-	KBD_LED_PIN2,
-	KBD_LED_PIN3
+const uint8_t KeyboardLEDPin[KBD_LED_PINCOUNT] = {
+  KBD_LED_PIN1,
+  KBD_LED_PIN2,
+  KBD_LED_PIN3
 };
 
 //A list of the Display Control button pins. They might not be in an unbroken row of pin numbers.
-const uint8_t DisplayButtonPin[DISP_CTRL_PINCOUNT] =
-{
-	DISP_CTRL_PIN1,
-	DISP_CTRL_PIN2,
-	DISP_CTRL_PIN3,
-	DISP_CTRL_PIN4,
-	DISP_CTRL_PIN5
+const uint8_t DisplayButtonPin[DISP_CTRL_PINCOUNT] = {
+  DISP_CTRL_PIN1,
+  DISP_CTRL_PIN2,
+  DISP_CTRL_PIN3,
+  DISP_CTRL_PIN4,
+  DISP_CTRL_PIN5
 };
 
-//This is used by ProcessPressedKeys
+//This is used by DetectPressedKeys
 bool CurrentlyPressedKeys[KBD_REAL_KEY_COUNT];
-//This is for comparing to see what has changed
+//This is for comparing
 bool PreviouslyPressedKeys[KBD_REAL_KEY_COUNT];
 
+char buf1[4], buf2[4];
+char buffer[10];
+uint8_t DbgLoopStart = 0;
 
 // the setup routine runs once when you press reset
 void setup() {
-  ActivateKeyboardPullUps();
-
+#ifdef KBD_DEBUG
+  //initialize serial communication at 9600 bits per second:
+  //This is the debug output.
+  Serial.begin(9600);
+  Serial.println("entering setup()...");
+#endif
   //Prepare the output pins for LED and Display buttons.
   PrepareKbdLeds();
   PrepareDspKeys();
 
-
-
 #ifdef KBD_DEBUG
-
   //Let all leds flash up. Nice during development.
   TestAllKbdLeds();
-  //TestAllDspKeys();
-
-  //initialize serial communication at 9600 bits per second:
-  //This is the debug output.
-  Serial.begin(9600);
-#endif  
-
+  TestAllDspKeys();
+#endif
   keyboard.keyboard_init();  //ps2dev
 
 #ifdef KBD_DEBUG
-  Serial.println("setup done");
-#endif  
-
+  Serial.println("leaving setup()...");
+#endif
 }
 
-void loop()
-{
-    unsigned char leds; //ps2dev
+// the loop routine runs over and over again forever:
+void loop() {
+  unsigned char leds;  //ps2dev
+  uint8_t index = KBD_REAL_KEY_COUNT;
 
-    uint8_t index;
+#ifdef KBD_DEBUG
+  if (DbgLoopStart == 0) {
+    Serial.println("entering loop() for the first time...");
+  }
+#endif
 
-#ifdef KBD_DEBUG    
-  //Start of measurement    
+
+  //backup the old detected data
+  while (index--) *(PreviouslyPressedKeys + index) = *(CurrentlyPressedKeys + index);
+#ifdef KBD_DEBUG
   DbgTimeStart = micros();
 #endif
-
-    //backup the old detected data
-    for (index = 0; index < KBD_REAL_KEY_COUNT; index++)
-    {
-      PreviouslyPressedKeys[index] = CurrentlyPressedKeys[index];
-    }
-    //get new data
-    ProcessPressedKeys();
-
+  //get new data
+  DetectPressedKeys();
 #ifdef KBD_DEBUG
-  //End of measurement    
   DbgTimeEnd = micros();
-
- // Serial.print(F("' ScanDuration(µs)"));
- // Serial.println(itoa(DbgTimeEnd - DbgTimeStart, DbgBuf1, 10)); 
 #endif
 
-  
-//ps2dev
-  if(keyboard.keyboard_handle(&leds)) 
-  { 
+  for (index = 0; index < KBD_REAL_KEY_COUNT; index++) {
+    if (PreviouslyPressedKeys[index] != CurrentlyPressedKeys[index]) {
+
 #ifdef KBD_DEBUG
-    Serial.print('LEDS');
-    Serial.print(leds, HEX);
-#endif    
-   // digitalWrite(LED_BUILTIN, leds);
+      //change detected
+      if (CurrentlyPressedKeys[index]) {
+        Serial.print(F("pressed: "));
+      } else {
+        Serial.print(F("released: "));
+      }
+
+      strcpy_P(buffer, (char*)pgm_read_word(&(HumanReadableDecoder[index])));
+
+      Serial.print(F("Key#"));
+      Serial.print(itoa(index, buf1, 10));
+      Serial.print(F(",Pin1="));
+      Serial.print(itoa(MatrixPins[index].Pin1, buf1, 10));
+      Serial.print(F(",Pin2="));
+      Serial.print(itoa(MatrixPins[index].Pin2, buf2, 10));
+      Serial.print(F(",HRLabel='"));
+      Serial.print(buffer);
+      Serial.print(F("' ScanDuration(µs)"));
+      Serial.print(itoa(DbgTimeEnd - DbgTimeStart, buf1, 10));
+      Serial.println(F("'"));
+#endif
+    }
   }
-}
-
-void SendScanCodeOverPs2(uint8_t ScanCodeFragment, uint8_t ScanCodeId, uint8_t VirtKey )
-{
-  #ifdef KBD_DEBUG
-      Serial.print("PS2: code 0x");
-     // Serial.print(itoa(ScanCodeFragment, DbgBuf1, 16));
-      Serial.print(ScanCodeFragment,HEX);
-      Serial.print(", Detail 0x");
-      Serial.print(ScanCodeId, HEX);
-      Serial.print(", Key(dez) ");
-
-      Serial.println(VirtKey);
-
-  #endif
-  switch(ScanCodeId)
-  {
-    case SCANID_MK_STD:
-      keyboard.keyboard_press(ScanCodeFragment);
-    break;
-    case SCANID_MK_SPCL:
-      keyboard.keyboard_press_special(ScanCodeFragment);
-    break;
-    case SCANID_BK_STD:
-      keyboard.keyboard_release(ScanCodeFragment);
-    break;
-    case SCANID_BK_SPCL:
-      keyboard.keyboard_release_special(ScanCodeFragment);
-    break;
-
-    case SCANID_MK_PRINT:
-      keyboard.keyboard_press_printscreen();
-    break;
-    case SCANID_BK_PRINT:
-      keyboard.keyboard_release_printscreen();
-    break;
-    case SCANID_MK_BREAK:
-      keyboard.keyboard_pausebreak();
-    break;
-    case SCANID_DUMMY:
-      //do nothing
-    break;
+#ifdef KBD_DEBUG
+  if (DbgLoopStart == 0) {
+    Serial.println("passed loop() for the first time. loop() will continue without further messages...");
+    DbgLoopStart = 1;
   }
+#endif
 }
 
 /*
-  ProcessPressedKeys
-
-  - Determines the currently pressed keys 
-  - Triggers SendScanCodeOverPs2 . 
-  
-  - Uses MatrixPins to select the right pins to deal with for each button.
-  - Uses SetKbdPin and 
-  A sideeffect is a change in array of bool CurrentlyPressedKeys
+  Determines the currently pressed keys. The result is the array of bool CurrentlyPressedKeys
 */
-void ProcessPressedKeys()
-{
+void DetectPressedKeys() {
   uint8_t ScanIndex, ScanByteCount, VirtKeyIndex, OutPin, InPin, Ps2CodeFragment, Ps2CodeDetail;
   bool Result, FnDependend, NumLockDependend, SendMakeCode, SendBreakCode;
 
-
-
-  //A loop over all keys. Note that the loop will start at 0 and not reach KBD_REAL_KEY_COUNT
-  for (ScanIndex = 0; ScanIndex < KBD_REAL_KEY_COUNT; ScanIndex++)
-  {
+  //over all keys
+  for (ScanIndex = 0; ScanIndex < KBD_REAL_KEY_COUNT; ScanIndex++) {
     //init
     FnDependend = 0;
-    NumLockDependend =0;
+    NumLockDependend = 0;
     VirtKeyIndex = 0;
     SendMakeCode = 0;
     SendBreakCode = 0;
     Ps2CodeDetail = SCANID_DUMMY;
 
     //The two pins with the specific button in between.
-    OutPin = MatrixPins[ScanIndex].Pin1; 
-    InPin = MatrixPins[ScanIndex].Pin2; 
+    OutPin = MatrixPins[ScanIndex].Pin1;
+    InPin = MatrixPins[ScanIndex].Pin2;
 
     //set output pin LOW.
     SetKbdPin(OutPin, LOW);
+
     //Set the input pullup before reading
-    //SetKbdPinMode(InPin, INPUT_PULLUP);
+    SetKbdPinMode(InPin, INPUT_PULLUP);
 
     //Without a small delay, keys may be accidently reported as pressed, even without any user action.
     delayMicroseconds(10);
 
     //get the result (a bool), but invert it as a pressed key reads as a LOW from the OutPin.
     Result = !GetKbdPin(InPin);
-    //CurrentlyPressedKeys[ScanIndex] = Result;
+    CurrentlyPressedKeys[ScanIndex] = Result;
 
+    if (PreviouslyPressedKeys[ScanIndex] != Result) {
+      //There is a change in the status of this button!
+      if (Result) {
+        //Key is pressed, send MakeCode
+        SendMakeCode = 1;
 
-    if (PreviouslyPressedKeys[ScanIndex] != Result)
-    {
-        //There is a change in the status of this button!
-        if (Result)
-        {
-          //Key is pressed, send MakeCode
-          SendMakeCode = 1;
-         
+      } else {
+        //key is release, send BreakCode
+        SendBreakCode = 1;
+      }
+
+      //preset, might be overwritten if there are special keys to deal with
+      VirtKeyIndex = ScanIndex;
+
+      //deal with current Fn button status. Fn itself does not trigger any PS/2 scan code
+      if (CurrentlyPressedKeys[KBD_KEY_FN]) {
+
+        if ((ScanIndex >= KBD_FN_DEPENDENT_START_INDEX) && (ScanIndex <= KBD_FN_DEPENDENT_END_INDEX)) {
+          FnDependend = 1;
+          VirtKeyIndex = ScanIndex + KBD_FN_ACTIVATED_OFFSET;
         }
-        else
-        {
-          //key is release, send BreakCode
-          SendBreakCode = 1;
-          
+      }
+
+      //deal with Num Lock status
+      if (KeyboardLEDPin[KBD_CAPS_LOCK]) {
+        if ((ScanIndex >= KBD_KBD_NUMLOCK_DEPENDENT_END_INDEX) && (ScanIndex <= NUMLOCK_DEPENDENT_END_INDEX)) {
+          NumLockDependend = 1;
+          VirtKeyIndex = ScanIndex + KBD_NUMLOCK_ACTIVATED_OFFSET;
         }
+      }
 
-        //preset, might be overwritten if there are special keys to deal with
-        VirtKeyIndex = ScanIndex; 
-
-        //deal with current Fn button status. Fn itself does not trigger any PS/2 scan code
-        if (CurrentlyPressedKeys[KBD_KEY_FN])
-        {
-          
-          if ((ScanIndex >= KBD_FN_DEPENDENT_START_INDEX) && (ScanIndex <= KBD_FN_DEPENDENT_END_INDEX))
-          {
-            FnDependend = 1;
-            VirtKeyIndex = ScanIndex + KBD_FN_ACTIVATED_OFFSET;
-          }
-        }
-
-        //deal with Num Lock status
-        if (KeyboardLEDPin[KBD_CAPS_LOCK])
-        {
-          if ((ScanIndex >= KBD_KBD_NUMLOCK_DEPENDENT_END_INDEX) && (ScanIndex <= NUMLOCK_DEPENDENT_END_INDEX))
-          {
-              NumLockDependend = 1;
-              VirtKeyIndex = ScanIndex + KBD_NUMLOCK_ACTIVATED_OFFSET; 
-          }
-        }
-
-      if (VirtKeyIndex != KBD_KEY_FN) //keep calm if it is the Fn key
+      if (VirtKeyIndex != KBD_KEY_FN)  //keep calm if it is the Fn key
       {
 
 
         //Scan is done. Now put the pieces together to get the correct scancode
-        if (SendMakeCode == 1)
-        {
-            //We need the MakeCode         
+        if (SendMakeCode == 1) {
+          //We need the MakeCode
 
-              switch (Ps2CodeCombo[VirtKeyIndex].ByteCountMakeCode)
-              {
-                case SCANCODE_1BYTE:
-                  Ps2CodeDetail =  SCANID_MK_STD;
-                break;
-                case SCANCODE_2BYTE:
-                  Ps2CodeDetail =  SCANID_MK_SPCL;
-                break;
-                default:
-                  if (VirtKeyIndex == KBD_KEY_PRINT)
-                  {
-                    Ps2CodeDetail = SCANID_MK_PRINT;
-                  }
-                  else
-                  {
-                    if (VirtKeyIndex == KBD_KEY_BREAK)
-                    {
-                        Ps2CodeDetail = SCANID_MK_BREAK;
-                    }
-                    else
-                    {
-                      //no known other scan codes
-                      Ps2CodeDetail = SCANID_DUMMY;
-                    }
-                  }                
-              }
-              Ps2CodeFragment = Ps2CodeCombo[VirtKeyIndex].MakeCode;
-              SendScanCodeOverPs2(Ps2CodeFragment, Ps2CodeDetail, VirtKeyIndex);
-#ifdef KBD_DEBUG
-    Serial.print("ScanIndex: " );
-    Serial.print(ScanIndex );
-    Serial.print(" OutPin: " );
-    Serial.print(OutPin );
-   Serial.print(" InPin: " );
-    Serial.print(InPin );
-   Serial.print(" Result: " );
-    Serial.println(Result );   
-#endif              
-                        
-       }
-      
-        if (SendBreakCode == 1)
-        {
-
-            //We need the BreakCode
-            switch (Ps2CodeCombo[VirtKeyIndex].ByteCountMakeCode) //yes, makecode
-            {
-              case SCANCODE_1BYTE:
-                Ps2CodeDetail =  SCANID_BK_STD;
+          switch (Ps2CodeCombo[VirtKeyIndex].ByteCountMakeCode) {
+            case SCANCODE_1BYTE:
+              Ps2CodeDetail = SCANID_MK_STD;
               break;
-              case SCANCODE_2BYTE:
-                Ps2CodeDetail =  SCANID_BK_SPCL;
+            case SCANCODE_2BYTE:
+              Ps2CodeDetail = SCANID_MK_SPCL;
               break;
-              default:
-                if (VirtKeyIndex == KBD_KEY_PRINT)
-                {
-                  Ps2CodeDetail = SCANID_BK_PRINT;
-                }
-                else
-                {
+            default:
+              if (VirtKeyIndex == KBD_KEY_PRINT) {
+                Ps2CodeDetail = SCANID_MK_PRINT;
+              } else {
+                if (VirtKeyIndex == KBD_KEY_BREAK) {
+                  Ps2CodeDetail = SCANID_MK_BREAK;
+                } else {
+                  //no known other scan codes
                   Ps2CodeDetail = SCANID_DUMMY;
-                  //There is no break for break
-                  //and no known other weired scan codes
-                }                
-            }
-            Ps2CodeFragment = Ps2CodeCombo[VirtKeyIndex].MakeCode;
-
-            SendScanCodeOverPs2(Ps2CodeFragment, Ps2CodeDetail, VirtKeyIndex);
-            
+                }
+              }
+          }
+          Ps2CodeFragment = Ps2CodeCombo[VirtKeyIndex].MakeCode;
+          SendScanCodeOverPs2(Ps2CodeFragment, Ps2CodeDetail, VirtKeyIndex);
 #ifdef KBD_DEBUG
-    Serial.print("ScanIndex: " );
-    Serial.print(ScanIndex );
-    Serial.print(" OutPin: " );
-    Serial.print(OutPin );
-    Serial.print(" InPin: " );
-    Serial.print(InPin );
-     Serial.print(" Result: " );
-    Serial.println(Result );  
+          Serial.print("ScanIndex: ");
+          Serial.print(ScanIndex);
+          Serial.print(" OutPin: ");
+          Serial.print(OutPin);
+          Serial.print(" InPin: ");
+          Serial.print(InPin);
+          Serial.print(" Result: ");
+          Serial.println(Result);
+#endif
+        }
+
+        if (SendBreakCode == 1) {
+
+          //We need the BreakCode
+          switch (Ps2CodeCombo[VirtKeyIndex].ByteCountMakeCode)  //yes, makecode
+          {
+            case SCANCODE_1BYTE:
+              Ps2CodeDetail = SCANID_BK_STD;
+              break;
+            case SCANCODE_2BYTE:
+              Ps2CodeDetail = SCANID_BK_SPCL;
+              break;
+            default:
+              if (VirtKeyIndex == KBD_KEY_PRINT) {
+                Ps2CodeDetail = SCANID_BK_PRINT;
+              } else {
+                Ps2CodeDetail = SCANID_DUMMY;
+                //There is no break for break
+                //and no known other weired scan codes
+              }
+          }
+          Ps2CodeFragment = Ps2CodeCombo[VirtKeyIndex].MakeCode;
+
+          SendScanCodeOverPs2(Ps2CodeFragment, Ps2CodeDetail, VirtKeyIndex);
+
+#ifdef KBD_DEBUG
+          Serial.print("ScanIndex: ");
+          Serial.print(ScanIndex);
+          Serial.print(" OutPin: ");
+          Serial.print(OutPin);
+          Serial.print(" InPin: ");
+          Serial.print(InPin);
+          Serial.print(" Result: ");
+          Serial.println(Result);
 #endif
         }
       }
       //if neither SendMakeCode nor SendBreakCode are set, there is nothing to do beside from storing the result of the scan.
-      CurrentlyPressedKeys[ScanIndex] = Result;
-    
-        //To discharge any capacitance. Pullup will pull to HIGH, so HIGH is the default value
-        //SetKbdPin(OutPin, HIGH);
-        //SetKbdPin(InPin, HIGH);
- //delayMicroseconds(10);
-        //remove the output voltage for the scanned key
-        SetKbdPinMode(OutPin, INPUT);
-       // SetKbdPinMode(InPin, INPUT);
-  delayMicroseconds(10);       
-        //SetKbdPinMode(OutPin, INPUT_PULLUP);
+      //CurrentlyPressedKeys[ScanIndex] = Result;
 
-    }//if (PreviouslyPressedKeys[index] != CurrentlyPressedKeys[index])
-#ifdef KBD_DEBUG
-Serial.print(ScanIndex );
-#endif
-  }//for
-
-    /*processing is done for all keys. */
-}
-
-
-
-/*
-  Activate the internal Pullup Resistors for all Pins wired to the Keyboard Matrix
-*/
-void ActivateKeyboardPullUps()
-{
-  uint8_t i;
-  for (i = 1; i <= KBD_PINCOUNT; i++)
-  {
-    SetKbdPinMode(i, INPUT);
-    SetKbdPinMode(i, INPUT_PULLUP);
+    }  //if (PreviouslyPressedKeys[index] != CurrentlyPressedKeys[index])
+    //remove the output voltage
+    SetKbdPinMode(OutPin, INPUT);
+    SetKbdPinMode(OutPin, INPUT_PULLUP);
   }
 }
+
 /*
    Set the 3 Keyboard LEDs (Caps Lock, Num Lock, Scroll Lock)
    Paranmeter: char
@@ -455,19 +366,15 @@ void ActivateKeyboardPullUps()
    An active bit means: Set the LED. The other 5 bits will be ignored.
    Call again with blanked bit to clear the LED
 */
-void SetKeyboardLEDs (uint8_t LedValues)
-{
-  
+void SetKeyboardLEDs(uint8_t LedValues) {
   uint8_t i;
   /*
      The lower 3 bits of the input will trigger the LEDs
   */
   //over all LEDs
-  for (i = 0; i < KBD_LED_PINCOUNT; i++)
-  {
+  for (i = 0; i < KBD_LED_PINCOUNT; i++) {
     //shift the filter bit each time
     SetKbdLedPin(i, (LedValues & (0x01 << i)));
-
   }
 }
 
@@ -479,38 +386,33 @@ void SetKeyboardLEDs (uint8_t LedValues)
   Use the constants DISPLAY_KEY_1...DISPLAY_KEY_5 to combine the input.
   An active bit means: Set the Key. The other 3 bits will be ignored.
 */
-void SetDisplayControlKeys (uint8_t KeyValues)
-{
- uint8_t i;
+void SetDisplayControlKeys(uint8_t KeyValues) {
+  uint8_t i;
 
   //over all control keys
-  for (i = 0; i < DISP_CTRL_PINCOUNT; i++)
-  {
+  for (i = 0; i < DISP_CTRL_PINCOUNT; i++) {
     //shift the filter bit each time
 
-    SetDispCtrlPin(i, KeyValues & (0x01 << i) );
+    SetDispCtrlPin(i, KeyValues & (0x01 << i));
   }
 }
-
 /*
   Set a single Keyboard pin as output and give it the defined value.
   To simplify bug hunting, this shall be the only way to set any Keyboard value.
   PinNumber is 1 ... KBD_PINCOUNT.
 */
-void SetKbdPin (uint8_t PinNumber, bool OutVal)
-{
+void SetKbdPin(uint8_t PinNumber, bool OutVal) {
+  //new
   SetKbdPinMode(PinNumber, OUTPUT);
-  digitalWrite(KeyboardPin[PinNumber-1], OutVal);
+  digitalWrite(KeyboardPin[PinNumber - 1], OutVal);
 }
-
 /*
   Get a single Keyboard pin value
   To simplify bug hunting, this shall be the only way to get any Keyboard value.
   PinNumber is 1 ... KBD_PINCOUNT.
 */
-bool GetKbdPin (uint8_t PinNumber)
-{
-  return digitalRead(KeyboardPin[PinNumber-1]);
+bool GetKbdPin(uint8_t PinNumber) {
+  return digitalRead(KeyboardPin[PinNumber - 1]);
 }
 
 
@@ -519,75 +421,57 @@ bool GetKbdPin (uint8_t PinNumber)
   To simplify bug hunting, this shall be the only way to set any Keyboard pinmode.
  PinNumber is 1 ... KBD_PINCOUNT.
 */
-void SetKbdPinMode (uint8_t PinNumber, uint8_t PinMode)
-{
+void SetKbdPinMode(uint8_t PinNumber, uint8_t PinMode) {
   //change mode
-  pinMode(KeyboardPin[PinNumber-1], PinMode);
+  pinMode(KeyboardPin[PinNumber - 1], PinMode);
 }
-
-
-
-void SetKbdLedPin (uint8_t PinNumber, bool OutVal)
-{
+void SetKbdLedPin(uint8_t PinNumber, bool OutVal) {
   SetKbdLedPinMode(PinNumber, OUTPUT);
   digitalWrite(KeyboardLEDPin[PinNumber], OutVal);
 }
 
-void SetKbdLedPinMode (uint8_t PinNumber, uint8_t PinMode)
-{
+void SetKbdLedPinMode(uint8_t PinNumber, uint8_t PinMode) {
   pinMode(KeyboardLEDPin[PinNumber], PinMode);
 }
 
-void SetDispCtrlPin (uint8_t PinNumber, bool OutVal)
-{
+void SetDispCtrlPin(uint8_t PinNumber, bool OutVal) {
   SetDispCtrlPinMode(PinNumber, OUTPUT);
   digitalWrite(DisplayButtonPin[PinNumber], OutVal);
 }
 
-void SetDispCtrlPinMode (uint8_t PinNumber, uint8_t PinMode)
-{
+void SetDispCtrlPinMode(uint8_t PinNumber, uint8_t PinMode) {
   pinMode(DisplayButtonPin[PinNumber], PinMode);
 }
 
-void PrepareKbdLeds()
-{
+void PrepareKbdLeds() {
   uint8_t i;
 
-  for (i = 0; i < KBD_LED_PINCOUNT; i++)
-  {
+  for (i = 0; i < KBD_LED_PINCOUNT; i++) {
     SetKbdLedPinMode(i, OUTPUT);
   }
 }
 
-
-void PrepareDspKeys()
-{
+void PrepareDspKeys() {
   uint8_t i;
 
-  for (i = 0; i < DISP_CTRL_PINCOUNT; i++)
-  {
+  for (i = 0; i < DISP_CTRL_PINCOUNT; i++) {
     SetDispCtrlPinMode(i, OUTPUT);
   }
 }
-
-
-
 /*
   Iterate over the keyboard LEDs and the keys to adjust the display adapter board.
   Set each pin to High, wait some time, then set back to low
   Usefull for hardware debugging. The LEDs and Keys are known via their defines.
 */
-void TestAllKbdLeds()
-{
+void TestAllKbdLeds() {
   uint8_t i;
-  const unsigned long myDelay = TestDelayMs; //milliseconds
- 
+  const unsigned long myDelay = TestDelayMs;  //milliseconds
 
-  const unsigned char pattern[KBD_LED_PINCOUNT] =
-  {
+
+  const unsigned char pattern[KBD_LED_PINCOUNT] = {
     //The LEDs
-    BITVAL_CAPS_LOCK_LED,    
-    BITVAL_NUM_LOCK_LED,    
+    BITVAL_CAPS_LOCK_LED,
+    BITVAL_NUM_LOCK_LED,
     BITVAL_SCROLL_LOCK_LED
   };
 
@@ -595,11 +479,10 @@ void TestAllKbdLeds()
   SetKeyboardLEDs(0x07);  //all active
 
   delay(myDelay);
-  SetKeyboardLEDs(0x00); //all off
+  SetKeyboardLEDs(0x00);  //all off
 
   delay(myDelay);
-  for (i = 0; i < KBD_LED_PINCOUNT; i++)
-  {
+  for (i = 0; i < KBD_LED_PINCOUNT; i++) {
     SetKeyboardLEDs(pattern[i]);
     delay(myDelay);
     SetKeyboardLEDs(0x00);
@@ -608,36 +491,71 @@ void TestAllKbdLeds()
 }
 
 
-void TestAllDspKeys()
-{
+void TestAllDspKeys() {
   uint8_t i;
-  const unsigned long myDelay = TestDelayMs; //milliseconds
+  const unsigned long myDelay = TestDelayMs;  //milliseconds
   const unsigned char pinCount = 5, keyCount = 5;
 
 
-  const unsigned char pattern[pinCount] =
-  {
+  const unsigned char pattern[pinCount] = {
     //The Control Keys
-    BITVAL_DISP_CTRL_PIN1, 
-    BITVAL_DISP_CTRL_PIN2, 
-    BITVAL_DISP_CTRL_PIN3, 
-    BITVAL_DISP_CTRL_PIN4, 
+    BITVAL_DISP_CTRL_PIN1,
+    BITVAL_DISP_CTRL_PIN2,
+    BITVAL_DISP_CTRL_PIN3,
+    BITVAL_DISP_CTRL_PIN4,
     BITVAL_DISP_CTRL_PIN5
   };
 
   delay(myDelay);
   SetDisplayControlKeys(0xFF);
   delay(myDelay);
-  SetDisplayControlKeys(0x00); //all off
+  SetDisplayControlKeys(0x00);  //all off
 
   delay(myDelay);
-  for (i = 0; i < keyCount; i++)
-  {
-    SetDisplayControlKeys(pattern[i ] );
+  for (i = 0; i < keyCount; i++) {
+    SetDisplayControlKeys(pattern[i]);
     delay(myDelay);
     SetDisplayControlKeys(0x00);
   }
 }
 
+void SendScanCodeOverPs2(uint8_t ScanCodeFragment, uint8_t ScanCodeId, uint8_t VirtKey) {
+#ifdef KBD_DEBUG
+  Serial.print("PS2: code 0x");
+  // Serial.print(itoa(ScanCodeFragment, DbgBuf1, 16));
+  Serial.print(ScanCodeFragment, HEX);
+  Serial.print(", Detail 0x");
+  Serial.print(ScanCodeId, HEX);
+  Serial.print(", Key(dez) ");
 
+  Serial.println(VirtKey);
 
+#endif
+  switch (ScanCodeId) {
+    case SCANID_MK_STD:
+      keyboard.keyboard_press(ScanCodeFragment);
+      break;
+    case SCANID_MK_SPCL:
+      keyboard.keyboard_press_special(ScanCodeFragment);
+      break;
+    case SCANID_BK_STD:
+      keyboard.keyboard_release(ScanCodeFragment);
+      break;
+    case SCANID_BK_SPCL:
+      keyboard.keyboard_release_special(ScanCodeFragment);
+      break;
+
+    case SCANID_MK_PRINT:
+      keyboard.keyboard_press_printscreen();
+      break;
+    case SCANID_BK_PRINT:
+      keyboard.keyboard_release_printscreen();
+      break;
+    case SCANID_MK_BREAK:
+      keyboard.keyboard_pausebreak();
+      break;
+    case SCANID_DUMMY:
+      //do nothing
+      break;
+  }
+}
