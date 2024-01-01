@@ -18,7 +18,7 @@ b) Use the existing keyboard matrix (german layout, 89 keys, curved)
   - Working: Temporary output of a detected key via UART (@9k6)
   - Working: scan time is around 2,5ms. No debouncing hard- or software and no delay in use. 
   - Working: Fn-Detection for debug out
-  - ToDo: key repeat (Timer triggered scan?)
+  - Working: key repeat
   - ToDo: automatic key press acceleration
   - ToDo: Integrate PS/2 Library for becoming a "homemade PS/2 Keyboard". 
   - ToDo: Glue logic for PS/2 (Buffer gate, Pullup-resistors. Will need additional 2 pins)
