@@ -11,9 +11,10 @@
   It has 5 buttons that will be replaced by some special keyboard shortcuts.
 
   This code does NOT deal with USB and also not with any video signal. 
-  This is a keyboard controller with some extra wires that can be set to high or low.  
+  This is a keyboard controller with some extra pins that can be set to high or low.
+  These pins replace buttons on a display controller board.
 
-  Currently there a 2 boards used as targets:
+  Currently there a 2 Atmel uC boards used as targets:
   - Arduino Mega 2560
   - Teensy ++2.0
 
@@ -25,26 +26,15 @@
   that "Teensy ++2.0" came into my hands, I decided to use it.
   
   NOTE: This code uses the Ps2Dev Library, which is made for AVR chips.
-  Not sure if it will work for other plattforms, like STM32 ("blue pill"). 
+  Not sure if it will work for other plattforms, like STM32 ("blue pill" etc). 
 */
 
 /*
 KBD_DEBUG will activate the serial debug output, and as a result, mess up the timing
 */
- #define KBD_DEBUG
+#define KBD_DEBUG
 
-#define SCANCODE_1BYTE 0x01
-#define SCANCODE_2BYTE 0x02
 
-#define SCANID_MK_STD 0x01
-#define SCANID_MK_SPCL 0x02
-#define SCANID_MK_PRINT 0x04
-#define SCANID_MK_BREAK 0x08
-
-#define SCANID_BK_STD 0x81
-#define SCANID_BK_SPCL 0x82
-#define SCANID_BK_PRINT 0x84
-#define SCANID_DUMMY 0x00
 
 //The MAKE- and BREAKCODES as macros (arrays)
 #include "PS2_DETAILS.h"
@@ -55,45 +45,45 @@ KBD_DEBUG will activate the serial debug output, and as a result, mess up the ti
 //This is the file to describe which pins of the development board are used.
 #include "PIN_ASSIGNMENTS.h"
 
-//Library to emulate a PS/2 device. Written for keyboards with US layout.
-//Provided enums ScanCodes/SpecialScanCodes do not match outside US. Doesn't matter, we have these numbers
+/*
+Library to emulate a PS/2 device. Written for keyboards with US layout.
+Provided enums ScanCodes/SpecialScanCodes do not match to non-US keyboards. 
+Doesn't matter, we will provide the right numbers
+*/
 #include <ps2dev.h>
 PS2dev keyboard(PS2_CLOCK, PS2_DATA);  //clock + data pins
 
-#define TestDelayMs 50
+
 
 #ifdef KBD_DEBUG
-unsigned long DbgTimeCount = 0;
-unsigned long DbgTimeStart, DbgTimeEnd;
-char DbgBuf1[30];
-
-char buf1[4], buf2[4];
-char buffer[10];
+//This is code for the debug outputs
+unsigned long DbgTimeCount = 0, DbgTimeStart, DbgTimeEnd;
+//Some char buffers for text output
+char DbgBuf1[30], DbgBuf2[4], DbgBuf3[4];
+//For identifying the first run of the loop
 uint8_t DbgLoopStart = 0;
 #endif
 
+//Remember the last pressed key, for implementing key repeat
 uint8_t LastPressedKey;
+//Remember when this key was last pressed
 unsigned long LastPressedKeyTimestamp;
-unsigned long KeyboardRepeatIntervalInMs = 500; //ms
-
-#define STD_KEY 0
-#define FN_COMPOSED_KEY 1
-
-
+//The repeat interval
+unsigned long KeyboardRepeatIntervalInMs = 1000;  //ms
 
 //This is used by DetectPressedKeys
 bool CurrentlyPressedKeys[KBD_REAL_KEY_COUNT];
 //This is for comparing
 bool PreviouslyPressedKeys[KBD_REAL_KEY_COUNT];
 
-
-
-// the setup routine runs once when you press reset
+/*
+  the setup routine runs once when you press reset
+*/
 void setup() {
 #ifdef KBD_DEBUG
   //initialize serial communication at 9600 bits per second:
   //This is the debug output.
-  Serial.begin(9600);
+  Serial.begin(57600);
   Serial.println("entering setup()...");
 #endif
   //Prepare the output pins for LED and Display buttons.
@@ -112,7 +102,9 @@ void setup() {
 #endif
 }
 
-// the loop routine runs over and over again forever:
+/*
+  the loop routine runs over and over again forever:
+*/
 void loop() {
   unsigned char leds;  //ps2dev
   uint8_t index = KBD_REAL_KEY_COUNT;
@@ -146,19 +138,19 @@ void loop() {
         Serial.print(F("released: "));
       }
 
-      strcpy_P(buffer, (char*)pgm_read_word(&(HumanReadableDecoder[index])));
+      strcpy_P(DbgBuf1, (char*)pgm_read_word(&(HumanReadableDecoder[index])));
 
-      Serial.print(F("Key#"));
-      Serial.print(itoa(index, buf1, 10));
-      Serial.print(F(",Pin1="));
-      Serial.print(itoa(MatrixPins[index].Pin1, buf1, 10));
-      Serial.print(F(",Pin2="));
-      Serial.print(itoa(MatrixPins[index].Pin2, buf2, 10));
-      Serial.print(F(",HRLabel='"));
-      Serial.print(buffer);
-      Serial.print(F("' ScanDuration(µs)"));
-      Serial.print(itoa(DbgTimeEnd - DbgTimeStart, buf1, 10));
-      Serial.println(F("'"));
+     // Serial.print(F("Key#"));
+     // Serial.print(itoa(index, DbgBuf2, 10));
+     // Serial.print(F(",Pin1="));
+     // Serial.print(itoa(MatrixPins[index].Pin1, DbgBuf2, 10));
+     // Serial.print(F(",Pin2="));
+     // Serial.print(itoa(MatrixPins[index].Pin2, DbgBuf3, 10));
+     // Serial.print(F(",HRLabel='"));
+      Serial.println(DbgBuf1);
+      //Serial.print(F("' ScanDuration(µs)"));
+      //Serial.print(itoa(DbgTimeEnd - DbgTimeStart, DbgBuf2, 10));
+
 #endif
     }
   }
@@ -186,7 +178,7 @@ void DetectPressedKeys() {
     VirtKeyIndex = 0;
     SendMakeCode = 0;
     SendBreakCode = 0;
-    Ps2CodeDetail = SCANID_DUMMY;
+    Ps2CodeDetail = SCANID_MK_DUMMY;
 
     //The two pins with the specific button in between.
     OutPin = MatrixPins[ScanIndex].Pin1;
@@ -199,18 +191,16 @@ void DetectPressedKeys() {
     SetKbdPinMode(InPin, INPUT_PULLUP);
 
     //Without a small delay, keys may be accidently reported as pressed, even without any user action.
-   // delayMicroseconds(10);
+    // delayMicroseconds(10);
 
     //get the result (a bool), but invert it as a pressed key reads as a LOW from the OutPin.
     Result = !GetKbdPin(InPin);
     CurrentlyPressedKeys[ScanIndex] = Result;
 
-    if ((Result) && (LastPressedKey == ScanIndex)&& (ScanIndex != KBD_KEY_FN))
-    {
+    if ((Result) && (LastPressedKey == ScanIndex) && (ScanIndex != KBD_KEY_FN)) {
       //A key is already pressed
       Now = millis();
-      if ((LastPressedKeyTimestamp + KeyboardRepeatIntervalInMs) < Now)
-      {
+      if ((LastPressedKeyTimestamp + KeyboardRepeatIntervalInMs) < Now) {
         //release the key to trigger it again
         CurrentlyPressedKeys[ScanIndex] = LOW;
       }
@@ -253,8 +243,6 @@ void DetectPressedKeys() {
 
       if (VirtKeyIndex != KBD_KEY_FN)  //keep calm if it is the Fn key
       {
-
-
         //Scan is done. Now put the pieces together to get the correct scancode
         if (SendMakeCode == 1) {
           //We need the MakeCode
@@ -274,22 +262,11 @@ void DetectPressedKeys() {
                   Ps2CodeDetail = SCANID_MK_BREAK;
                 } else {
                   //no known other scan codes
-                  Ps2CodeDetail = SCANID_DUMMY;
+                  Ps2CodeDetail = SCANID_MK_DUMMY;
                 }
               }
           }
           Ps2CodeFragment = Ps2CodeCombo[VirtKeyIndex].MakeCode;
-          SendScanCodeOverPs2(Ps2CodeFragment, Ps2CodeDetail, VirtKeyIndex);
-#ifdef KBD_DEBUG
-          Serial.print("ScanIndex: ");
-          Serial.print(ScanIndex);
-          Serial.print(" OutPin: ");
-          Serial.print(OutPin);
-          Serial.print(" InPin: ");
-          Serial.print(InPin);
-          Serial.print(" Result: ");
-          Serial.println(Result);
-#endif
         }
 
         if (SendBreakCode == 1) {
@@ -307,17 +284,26 @@ void DetectPressedKeys() {
               if (VirtKeyIndex == KBD_KEY_PRINT) {
                 Ps2CodeDetail = SCANID_BK_PRINT;
               } else {
-                Ps2CodeDetail = SCANID_DUMMY;
+                Ps2CodeDetail = SCANID_BK_DUMMY;
                 //There is no break for break
                 //and no known other weired scan codes
               }
           }
           Ps2CodeFragment = Ps2CodeCombo[VirtKeyIndex].MakeCode;
+        }
+        if ((SendMakeCode == 1) || (SendBreakCode == 1)) {
 
-          SendScanCodeOverPs2(Ps2CodeFragment, Ps2CodeDetail, VirtKeyIndex);
+          if ((Ps2CodeDetail == SCANID_MK_DUMMY) || (Ps2CodeDetail == SCANID_BK_DUMMY)) {
+            //The button is for internal use
+            TriggerDisplayButton(Ps2CodeDetail, VirtKeyIndex);
+          } else {
+            //The button needs to cause some PS/2 activity
+            SendScanCodeOverPs2(Ps2CodeFragment, Ps2CodeDetail, VirtKeyIndex);  //
+         }
 
 #ifdef KBD_DEBUG
-          Serial.print("ScanIndex: ");
+
+/*          Serial.print("ScanIndex: ");
           Serial.print(ScanIndex);
           Serial.print(" OutPin: ");
           Serial.print(OutPin);
@@ -325,12 +311,11 @@ void DetectPressedKeys() {
           Serial.print(InPin);
           Serial.print(" Result: ");
           Serial.println(Result);
+*/
+
 #endif
         }
       }
-      //if neither SendMakeCode nor SendBreakCode are set, there is nothing to do beside from storing the result of the scan.
-      //CurrentlyPressedKeys[ScanIndex] = Result;
-
     }  //if (PreviouslyPressedKeys[index] != CurrentlyPressedKeys[index])
     //remove the output voltage
     SetKbdPinMode(OutPin, INPUT);
@@ -439,15 +424,42 @@ void PrepareDspKeys() {
   }
 }
 /*
+ #define BITVAL_DISP_CTRL_POWER 		BITVAL_DISP_CTRL_PIN1
+  #define BITVAL_DISP_CTRL_DOWN	 	BITVAL_DISP_CTRL_PIN2
+  #define BITVAL_DISP_CTRL_UP	 		BITVAL_DISP_CTRL_PIN3
+  #define BITVAL_DISP_CTRL_MENU	 	BITVAL_DISP_CTRL_PIN4
+  #define BITVAL_DISP_CTRL_AUTO	 	BITVAL_DISP_CTRL_PIN5
+  
+*/
+void TriggerDisplayButton(uint8_t Ps2CodeDetail, uint8_t VirtKeyIndex) {
+  uint8_t DisplayButtons = 0x00;
+
+  switch (VirtKeyIndex) {
+    case KBD_FN_VIRTKEY_F6:
+      switch (Ps2CodeDetail) {
+        case (SCANID_MK_DUMMY):
+          //Serial.println("### € ein");
+          //bitwise OR
+          DisplayButtons |= BITVAL_DISP_CTRL_POWER;
+          break;
+        case (SCANID_BK_DUMMY):
+          //Serial.println("### € aus");
+          //biswise AND with inversed pattern
+          DisplayButtons &= ~BITVAL_DISP_CTRL_POWER;
+          break;
+      }
+      break;
+  }
+  SetDisplayControlKeys(DisplayButtons);
+}
+/*
   Iterate over the keyboard LEDs and the keys to adjust the display adapter board.
   Set each pin to High, wait some time, then set back to low
   Usefull for hardware debugging. The LEDs and Keys are known via their defines.
 */
 void TestAllKbdLeds() {
   uint8_t i;
-  const unsigned long myDelay = TestDelayMs;  //milliseconds
-
-
+  const unsigned long myDelay = KBD_TESTTIME;  //milliseconds
   const unsigned char pattern[KBD_LED_PINCOUNT] = {
     //The LEDs
     BITVAL_CAPS_LOCK_LED,
@@ -470,10 +482,15 @@ void TestAllKbdLeds() {
   }
 }
 
-
+#ifdef KBD_DEBUG
+/*
+This Subroutine is only useful for early developing tests. It sets each of the Display control
+button pins to High, one after the other. Once these pins are connected to the control board,
+calling this subroutine might disturb the whole thing.
+*/
 void TestAllDspKeys() {
   uint8_t i;
-  const unsigned long myDelay = TestDelayMs;  //milliseconds
+  const unsigned long myDelay = KBD_TESTTIME;  //milliseconds
   const unsigned char pinCount = 5, keyCount = 5;
 
 
@@ -498,11 +515,15 @@ void TestAllDspKeys() {
     SetDisplayControlKeys(0x00);
   }
 }
-
+#endif
+/*
+  This is our connection to the Ps2dev library.
+  It gets the scancode fragment and some more details and uses this to prepare the right call
+  to send the scancode.
+*/
 void SendScanCodeOverPs2(uint8_t ScanCodeFragment, uint8_t ScanCodeId, uint8_t VirtKey) {
 #ifdef KBD_DEBUG
   Serial.print("PS2: code 0x");
-  // Serial.print(itoa(ScanCodeFragment, DbgBuf1, 16));
   Serial.print(ScanCodeFragment, HEX);
   Serial.print(", Detail 0x");
   Serial.print(ScanCodeId, HEX);
@@ -511,6 +532,10 @@ void SendScanCodeOverPs2(uint8_t ScanCodeFragment, uint8_t ScanCodeId, uint8_t V
   Serial.println(VirtKey);
 
 #endif
+
+  //Most scancodes are 1byte, some are 2 byte and a few are longer.
+  //We always provide 1 byte, even for 2 byte scancodes. The ps2dev library knows how to fill this gap.
+  //For the longer scancodes, there are special subroutines to call. No scancode required.
   switch (ScanCodeId) {
     case SCANID_MK_STD:
       keyboard.keyboard_press(ScanCodeFragment);
@@ -533,8 +558,12 @@ void SendScanCodeOverPs2(uint8_t ScanCodeFragment, uint8_t ScanCodeId, uint8_t V
       break;
     case SCANID_MK_BREAK:
       keyboard.keyboard_pausebreak();
+      //Note: there is no Break for Break available. This is the only key that has no BreakCode
       break;
-    case SCANID_DUMMY:
+    case SCANID_MK_DUMMY:
+      //do nothing
+      break;
+    case SCANID_BK_DUMMY:
       //do nothing
       break;
   }
