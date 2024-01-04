@@ -19,13 +19,12 @@ b) Use the existing keyboard matrix (german layout, 89 keys, curved)
   - Done: scan time for the whole keyboard is less than 3ms. No debouncing hard- or software and no delay in use. 
   - Done: Fn-Detection for debug out
   - Done: key repeat
-  - ToDo: automatic key press acceleration
-  - work in progress: Integrate PS/2 Library for becoming a "homemade PS/2 Keyboard".
-  - Done: Code selects the right PS/2 scan codes 
-  - work in progress: Glue logic for PS/2 (Buffer gate, Pullup-resistors. Will need additional 2 pins)
-  - ToDo: Check signals with Oscilloskope / Digital Analyser, compare with other keyboard. 
-  - Done: The 3 LEDs of a usual keyboard (additional 3 pins) Subject to be dropped if running out of pins on final platform.
+  - Done: Integrate PS/2 Library for becoming a "homemade PS/2 Keyboard".
+  - Done: Code selects the right PS/2 scan codes
+     
   - ToDo: Add a photo of the layout and the wiring
+  - ToDo: Online Keyboard Test shows that (virtual) Numpad is not working at all. The affected Code runs side by side with Fn-handling, which works fine. Wrong codes?
+  - ToDo: Control Keyboard LEDs via PS2 signals
   
   Pin count: Matrix + LEDs + PS2 + DisplayAdapterKeys = 24(in/out) + 3(out) + 2(in/out) + 5(out) = 34. 
 ## Details of b) can be found in folder \keyboard
