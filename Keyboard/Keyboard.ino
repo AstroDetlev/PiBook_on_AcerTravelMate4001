@@ -253,10 +253,10 @@ void DetectPressedKeys() {
             Serial.print("\r\nreleased the key to enable to trigger it again:");
             Serial.print(ScanIndex);
 #endif
-            LastPressedKey = KBD_KEY_UNDEFINED; 
+            LastPressedKey = KBD_KEY_UNDEFINED;
           } else {
             //That key is released meanwhile
-            LastPressedKey = KBD_KEY_UNDEFINED;  
+            LastPressedKey = KBD_KEY_UNDEFINED;
 #ifdef KBD_DEBUG
             Serial.print("\r\nremoved repeat 'marking' from key:");
             Serial.print(ScanIndex);
@@ -487,32 +487,76 @@ void PrepareDspKeys() {
   }
 }
 /*
- #define BITVAL_DISP_CTRL_POWER 		BITVAL_DISP_CTRL_PIN1
-  #define BITVAL_DISP_CTRL_DOWN	 	BITVAL_DISP_CTRL_PIN2
-  #define BITVAL_DISP_CTRL_UP	 		BITVAL_DISP_CTRL_PIN3
-  #define BITVAL_DISP_CTRL_MENU	 	BITVAL_DISP_CTRL_PIN4
-  #define BITVAL_DISP_CTRL_AUTO	 	BITVAL_DISP_CTRL_PIN5
+ #define BITVAL_DISP_CTRL_POWER 		BITVAL_DISP_CTRL_PIN1   1
+  #define BITVAL_DISP_CTRL_DOWN	 	BITVAL_DISP_CTRL_PIN2     2
+  #define BITVAL_DISP_CTRL_UP	 		BITVAL_DISP_CTRL_PIN3     4
+  #define BITVAL_DISP_CTRL_MENU	 	BITVAL_DISP_CTRL_PIN4     8
+  #define BITVAL_DISP_CTRL_AUTO	 	BITVAL_DISP_CTRL_PIN5     16
   
 */
 void TriggerDisplayButton(uint8_t Ps2CodeDetail, uint8_t VirtKeyIndex) {
   uint8_t DisplayButtons = 0x00;
 
   switch (VirtKeyIndex) {
-    case KBD_FN_VIRTKEY_F6:
+    case KBD_FN_VIRTKEY_F5:
       switch (Ps2CodeDetail) {
         case (SCANID_MK_DUMMY):
-          //Serial.println("### € ein");
-          //bitwise OR
           DisplayButtons |= BITVAL_DISP_CTRL_POWER;
           break;
         case (SCANID_BK_DUMMY):
-          //Serial.println("### € aus");
-          //biswise AND with inversed pattern
           DisplayButtons &= ~BITVAL_DISP_CTRL_POWER;
           break;
       }
       break;
+    case KBD_FN_VIRTKEY_F6:
+      switch (Ps2CodeDetail) {
+        case (SCANID_MK_DUMMY):
+          DisplayButtons |= BITVAL_DISP_CTRL_MENU;
+          break;
+        case (SCANID_BK_DUMMY):
+          DisplayButtons &= ~BITVAL_DISP_CTRL_MENU;
+          break;
+      }
+      break;
+    case KBD_FN_VIRTKEY_F7:
+      switch (Ps2CodeDetail) {
+        case (SCANID_MK_DUMMY):
+          DisplayButtons |= BITVAL_DISP_CTRL_AUTO;
+          break;
+        case (SCANID_BK_DUMMY):
+          DisplayButtons &= ~BITVAL_DISP_CTRL_AUTO;
+          break;
+      }
+      break;
+   case KBD_FN_VIRTKEY_ARROW_RIGHT:
+      switch (Ps2CodeDetail) {
+        case (SCANID_MK_DUMMY):
+          DisplayButtons |= BITVAL_DISP_CTRL_UP;
+          break;
+        case (SCANID_BK_DUMMY):
+          DisplayButtons &= ~BITVAL_DISP_CTRL_UP;
+          break;
+      }
+      break;
+   case KBD_FN_VIRTKEY_ARROW_LEFT:
+      switch (Ps2CodeDetail) {
+        case (SCANID_MK_DUMMY):
+          DisplayButtons |= BITVAL_DISP_CTRL_DOWN;
+          break;
+        case (SCANID_BK_DUMMY):
+          DisplayButtons &= ~BITVAL_DISP_CTRL_DOWN;
+          break;
+      }      
+      break;
+
   }
+#ifdef KBD_DEBUG
+
+  Serial.print("\r\nDisplayControl Byte:");
+  Serial.print(DisplayButtons, HEX);
+
+
+#endif
   SetDisplayControlKeys(DisplayButtons);
 }
 /*

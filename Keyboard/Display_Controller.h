@@ -10,13 +10,6 @@
 	#define DISP_CTRL_PINCOUNT 5
 	
   //The values that represent the Display Buttons. Used to call the function
-	#define BITVAL_DISP_CTRL_PIN1 0x01
-	#define BITVAL_DISP_CTRL_PIN2 0x02
-	#define BITVAL_DISP_CTRL_PIN3 0x04
-	#define BITVAL_DISP_CTRL_PIN4 0x08
-	#define BITVAL_DISP_CTRL_PIN5 0x10
-
-
   #define BITVAL_DISP_CTRL_PIN1 0x01
 	#define BITVAL_DISP_CTRL_PIN2 0x02
 	#define BITVAL_DISP_CTRL_PIN3 0x04

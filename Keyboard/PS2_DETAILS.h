@@ -17,7 +17,7 @@
 ##### Keyboard to Host Commands
 #################################################################################
 */
-#define Ps2ScanCodeDummy 0x00  //Not a real scan code, just a dummy c:\GIT\PiBook_on_AcerTravelMate4001\Keyboard\PIN_ASSIGNMENTS.hthat will never be used on the wire
+#define Ps2ScanCodeDummy 0x00  //Not a real scan code, just a dummy that will never be used on the wire
 
 #define Ps2K2H_Acknowedge 		  0xFA
 #define Ps2K2H_SelftestPassed 	0xAA
