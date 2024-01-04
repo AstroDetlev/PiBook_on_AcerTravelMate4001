@@ -10,10 +10,16 @@
 #define KBD_PINCOUNT 24
 #define KBD_REAL_KEY_COUNT 89 //0 is the unknown key, the other 89 keys are known
 
+#define STD_KEY 0
+#define FN_COMPOSED_KEY 1
 
+#define KBD_TESTTIME 50 //ms
 
 //unique names and unique numbers for all electrical buttons. Numbers are used as index to iterate over all buttons
 //They are in a useful order that allows to set ranges to iterate through
+
+// Just a number that is not used
+#define KBD_KEY_UNDEFINED 255
 
 //Fn Key
 #define KBD_KEY_FN   			0 //This is the only key that has no PS/2 scancodes
@@ -60,61 +66,61 @@
 
 //These buttons have no special sideffects for our code. They are simply buttons.
 #define KBD_KEY_CAPS_LOCK 		29 // Turn on Capslock. Does not influence any PS2 code
-#define KBD_KEY_CTRL_L  			30 // Does not influence any PS2 code
-#define KBD_KEY_CTRL_R  			31 // Does not influence any PS2 code
-#define KBD_KEY_ALT_L  			32 // Does not influence any PS2 code
-#define KBD_KEY_ALT_R  			33 // Does not influence any PS2 code
-#define KBD_KEY_SHIFT_L  		34 // Does not influence any PS2 code
-#define KBD_KEY_SHIFT_R  		35 // Does not influence any PS2 code
-#define KBD_KEY_WIN_L  			36 // Does not influence any PS2 code
-#define KBD_KEY_WIN_R  			37 // Does not influence any PS2 code
-#define KBD_KEY_F1  				38 // Does not influence any PS2 code
-#define KBD_KEY_F9  				39 // Does not influence any PS2 code
-#define KBD_KEY_F10 				40 // Does not influence any PS2 code
-#define KBD_KEY_Q 				41 // Does not influence any PS2 code
-#define KBD_KEY_1 				42 // Does not influence any PS2 code
-#define KBD_KEY_ESC				43 // Does not influence any PS2 code
-#define KBD_KEY_CIRCUMFLEX  		44 // Does not influence any PS2 code
-#define KBD_KEY_TAB 				45 // Does not influence any PS2 code
-#define KBD_KEY_BACKSPACE 		46 // Does not influence any PS2 code
-#define KBD_KEY_3  				47 // Does not influence any PS2 code
-#define KBD_KEY_2  				48 // Does not influence any PS2 code
-#define KBD_KEY_INSERT  			49 // Does not influence any PS2 code
-#define KBD_KEY_DELETE  			50 // Does not influence any PS2 code
-#define KBD_KEY_HOME 			51 // Does not influence any PS2 code
-#define KBD_KEY_PAGE_UP 			52 // Does not influence any PS2 code
-#define KBD_KEY_PAGE_DOWN  		53 // Does not influence any PS2 code
-#define KBD_KEY_UE  				54 // Does not influence any PS2 code
-#define KBD_KEY_AE  				55 // Does not influence any PS2 code
-#define KBD_KEY_QUESTIONMARK  	56 // Does not influence any PS2 code
-#define KBD_KEY_5  				57 // Does not influence any PS2 code
-#define KBD_KEY_APOS  			58 // Does not influence any PS2 code
-#define KBD_KEY_6  				59 // Does not influence any PS2 code
-#define KBD_KEY_4  				60 // Does not influence any PS2 code
-#define KBD_KEY_ASTERISK   		61 // Does not influence any PS2 code
-#define KBD_KEY_T 				62 // Does not influence any PS2 code
-#define KBD_KEY_R  				63 // Does not influence any PS2 code
-#define KBD_KEY_W  				64 // Does not influence any PS2 code
-#define KBD_KEY_ENTER  			65 // Does not influence any PS2 code
-#define KBD_KEY_H  				66 // Does not influence any PS2 code
-#define KBD_KEY_Z  				67 // Does not influence any PS2 code
-#define KBD_KEY_E  				68 // Does not influence any PS2 code
-#define KBD_KEY_S  				69 // Does not influence any PS2 code
-#define KBD_KEY_COMMA  			70 // Does not influence any PS2 code
-#define KBD_KEY_SHARP  			71 // Does not influence any PS2 code
-#define KBD_KEY_END  			72 // Does not influence any PS2 code
-#define KBD_KEY_G  				73 // Does not influence any PS2 code
-#define KBD_KEY_V  				74 // Does not influence any PS2 code
-#define KBD_KEY_SPACE  			75 // Does not influence any PS2 code
-#define KBD_KEY_C  				76 // Does not influence any PS2 code
-#define KBD_KEY_N  				77 // Does not influence any PS2 code
-#define KBD_KEY_B  				78 // Does not influence any PS2 code
-#define KBD_KEY_F  				79 // Does not influence any PS2 code
-#define KBD_KEY_A  				80 // Does not influence any PS2 code
-#define KBD_KEY_D  				81 // Does not influence any PS2 code
-#define KBD_KEY_LOWER_THAN  		82 // Does not influence any PS2 code
-#define KBD_KEY_X  				83 // Does not influence any PS2 code
-#define KBD_KEY_Y  				84 // Does not influence any PS2 code
+#define KBD_KEY_CTRL_L  			30 
+#define KBD_KEY_CTRL_R  			31 
+#define KBD_KEY_ALT_L  			32 
+#define KBD_KEY_ALT_R  			33 
+#define KBD_KEY_SHIFT_L  		34 
+#define KBD_KEY_SHIFT_R  		35 
+#define KBD_KEY_WIN_L  			36 
+#define KBD_KEY_WIN_R  			37 
+#define KBD_KEY_F1  				38 
+#define KBD_KEY_F9  				39 
+#define KBD_KEY_F10 				40 
+#define KBD_KEY_Q 				41 
+#define KBD_KEY_1 				42 
+#define KBD_KEY_ESC				43 
+#define KBD_KEY_CIRCUMFLEX  		44 
+#define KBD_KEY_TAB 				45 
+#define KBD_KEY_BACKSPACE 		46 
+#define KBD_KEY_3  				47 
+#define KBD_KEY_2  				48 
+#define KBD_KEY_INSERT  			49 
+#define KBD_KEY_DELETE  			50 
+#define KBD_KEY_HOME 			51 
+#define KBD_KEY_PAGE_UP 			52 
+#define KBD_KEY_PAGE_DOWN  		53 
+#define KBD_KEY_UE  				54 
+#define KBD_KEY_AE  				55 
+#define KBD_KEY_QUESTIONMARK  	56 
+#define KBD_KEY_5  				57 
+#define KBD_KEY_APOS  			58 
+#define KBD_KEY_6  				59 
+#define KBD_KEY_4  				60 
+#define KBD_KEY_ASTERISK   		61 
+#define KBD_KEY_T 				62 
+#define KBD_KEY_R  				63 
+#define KBD_KEY_W  				64 
+#define KBD_KEY_ENTER  			65 
+#define KBD_KEY_H  				66 
+#define KBD_KEY_Z  				67 
+#define KBD_KEY_E  				68 
+#define KBD_KEY_S  				69 
+#define KBD_KEY_COMMA  			70 
+#define KBD_KEY_SHARP  			71 
+#define KBD_KEY_END  			72 
+#define KBD_KEY_G  				73 
+#define KBD_KEY_V  				74 
+#define KBD_KEY_SPACE  			75 
+#define KBD_KEY_C  				76 
+#define KBD_KEY_N  				77 
+#define KBD_KEY_B  				78 
+#define KBD_KEY_F  				79 
+#define KBD_KEY_A  				80 
+#define KBD_KEY_D  				81 
+#define KBD_KEY_LOWER_THAN  		82 
+#define KBD_KEY_X  				83 
+#define KBD_KEY_Y  				84 
 
 	#define KBD_SIMPLEBUTTON_START_INDEX KBD_KEY_CAPS_LOCK
 	#define KBD_SIMPLEBUTTON_END_INDEX KBD_KEY_Y
@@ -132,7 +138,7 @@
 	#define KBD_MACROBUTTON_END_INDEX KBD_KEY_EURO
 
 //#######Important!##########
-//This is the end of the button scan range. There are only 89 buttons in real life, so we scan for 89 only.
+//This is the end of the button scan range. There are only 89 buttons in real life, so we scan for these 89 only.
 //This number is available via KBD_REAL_KEY_COUNT
 //The following buttons are virtual and exist only as PS/2 scan codes details. 
 //These "virtual buttons" become active if special circumstances occur: Button "Fn" is active or NumLock LED is active.
@@ -176,6 +182,9 @@
 
 #define KBD_VIRT_KEY_COUNT 28 //117 - 89
 
+
+#ifdef KBD_DEBUG
+//These are the human readable "names" of the keys. Useful for debug, useless for the working keyboard
 
 const char PROGMEM HR_KEY_F11[] =      			"F11"                 ;
 const char PROGMEM HR_KEY_F12[] =      			"F12"                 ;
@@ -364,318 +373,236 @@ HR_KEY_FN
 ,HR_KEY_EURO
 };
 
+#endif //KBD_DEBUG
 
-const uint8_t KBD_PIN1_KEY_F11  		= 2;
-const uint8_t KBD_PIN1_KEY_F12  		= 2;
-const uint8_t KBD_PIN1_KEY_F8  			= 2;
-const uint8_t KBD_PIN1_KEY_Q  			= 2;
-const uint8_t KBD_PIN1_KEY_F4  			= 2;
-const uint8_t KBD_PIN1_KEY_F3  			= 2;
-const uint8_t KBD_PIN1_KEY_F7  			= 2;
-const uint8_t KBD_PIN1_KEY_1  			= 2;
+/*
+Each key of the keyboard matrix can be identified by a pair of pins (Pin1, Pin2). Set a certain signal on Pin1, 
+press the button and you will read the signal at Pin2 as long as the button is pressed.
+No other Pin is influenced and no other button will cause this effect.
 
-const uint8_t KBD_PIN1_KEY_ESC  		= 1;
-const uint8_t KBD_PIN1_KEY_CIRCUMFLEX  		= 1;
-const uint8_t KBD_PIN1_KEY_F5  			= 1;
-const uint8_t KBD_PIN1_KEY_TAB  		= 1;
-const uint8_t KBD_PIN1_KEY_F1  			= 1;
-const uint8_t KBD_PIN1_KEY_F2  			= 1;
-const uint8_t KBD_PIN1_KEY_F6  			= 1;
-const uint8_t KBD_PIN1_KEY_CAPS_LOCK  	= 1;
+The numbering is not based on any numbers used by Arduino. It is just 1...n
+*/
 
-const uint8_t KBD_PIN1_KEY_F10  		= 4;
-const uint8_t KBD_PIN1_KEY_F9  			= 4;
-const uint8_t KBD_PIN1_KEY_BACKSPACE  	= 4;
-const uint8_t KBD_PIN1_KEY_3  			= 4;
-const uint8_t KBD_PIN1_KEY_2  			= 4;
-const uint8_t KBD_PIN1_KEY_ARROW_UP  	= 4;
-const uint8_t KBD_PIN1_KEY_BREAK 		= 4;
-const uint8_t KBD_PIN1_KEY_PRINT  		= 4;
+#define KBD_PIN1_KEY_F11  		 2
+#define KBD_PIN1_KEY_F12  		 2
+#define KBD_PIN1_KEY_F8  			 2
+#define KBD_PIN1_KEY_Q  			 2
+#define KBD_PIN1_KEY_F4  			 2
+#define KBD_PIN1_KEY_F3  			 2
+#define KBD_PIN1_KEY_F7  			 2
+#define KBD_PIN1_KEY_1  			 2
 
-const uint8_t KBD_PIN1_KEY_INSERT  		= 3;
-const uint8_t KBD_PIN1_KEY_DELETE  		= 3;
-const uint8_t KBD_PIN1_KEY_HOME  		= 3;
-const uint8_t KBD_PIN1_KEY_PAGE_UP  	= 3;
-const uint8_t KBD_PIN1_KEY_PAGE_DOWN  	= 3;
-const uint8_t KBD_PIN1_KEY_ARROW_RIGHT  = 3;
-const uint8_t KBD_PIN1_KEY_ARROW_LEFT  	= 3;
-const uint8_t KBD_PIN1_KEY_ARROW_DOWN  	= 3;
+#define KBD_PIN1_KEY_ESC  		 1
+#define KBD_PIN1_KEY_CIRCUMFLEX  		 1
+#define KBD_PIN1_KEY_F5  			 1
+#define KBD_PIN1_KEY_TAB  		 1
+#define KBD_PIN1_KEY_F1  			 1
+#define KBD_PIN1_KEY_F2  			 1
+#define KBD_PIN1_KEY_F6  			 1
+#define KBD_PIN1_KEY_CAPS_LOCK  	 1
 
-const uint8_t KBD_PIN1_KEY_UE  			= 6;
-const uint8_t KBD_PIN1_KEY_P  			= 6;
-const uint8_t KBD_PIN1_KEY_AE  			= 6;
-const uint8_t KBD_PIN1_KEY_OE  			= 6;
-const uint8_t KBD_PIN1_KEY_MINUS  		= 6;
-const uint8_t KBD_PIN1_KEY_DOT  		= 6;
+#define KBD_PIN1_KEY_F10  		 4
+#define KBD_PIN1_KEY_F9  			 4
+#define KBD_PIN1_KEY_BACKSPACE  	 4
+#define KBD_PIN1_KEY_3  			 4
+#define KBD_PIN1_KEY_2  			 4
+#define KBD_PIN1_KEY_ARROW_UP  	 4
+#define KBD_PIN1_KEY_BREAK 		 4
+#define KBD_PIN1_KEY_PRINT  		 4
 
-const uint8_t KBD_PIN1_KEY_DOLLAR  		= 5;
-const uint8_t KBD_PIN1_KEY_QUESTIONMARK = 5;
-const uint8_t KBD_PIN1_KEY_7  			= 5;
-const uint8_t KBD_PIN1_KEY_9  			= 5;
-const uint8_t KBD_PIN1_KEY_5  			= 5;
+#define KBD_PIN1_KEY_INSERT  		 3
+#define KBD_PIN1_KEY_DELETE  		 3
+#define KBD_PIN1_KEY_HOME  		 3
+#define KBD_PIN1_KEY_PAGE_UP  	 3
+#define KBD_PIN1_KEY_PAGE_DOWN  	 3
+#define KBD_PIN1_KEY_ARROW_RIGHT   3
+#define KBD_PIN1_KEY_ARROW_LEFT  	 3
+#define KBD_PIN1_KEY_ARROW_DOWN  	 3
 
-const uint8_t KBD_PIN1_KEY_0  			= 8;
-const uint8_t KBD_PIN1_KEY_APOS  		= 8;
-const uint8_t KBD_PIN1_KEY_6  			= 8;
-const uint8_t KBD_PIN1_KEY_8  			= 8;
-const uint8_t KBD_PIN1_KEY_4  			= 8;
+#define KBD_PIN1_KEY_UE  			 6
+#define KBD_PIN1_KEY_P  			 6
+#define KBD_PIN1_KEY_AE  			 6
+#define KBD_PIN1_KEY_OE  			 6
+#define KBD_PIN1_KEY_MINUS  		 6
+#define KBD_PIN1_KEY_DOT  		 6
 
-const uint8_t KBD_PIN1_KEY_EURO  		= 7;
+#define KBD_PIN1_KEY_DOLLAR  		 5
+#define KBD_PIN1_KEY_QUESTIONMARK  5
+#define KBD_PIN1_KEY_7  			 5
+#define KBD_PIN1_KEY_9  			 5
+#define KBD_PIN1_KEY_5  			 5
 
-const uint8_t KBD_PIN1_KEY_CTRL_L  		= 10;
-const uint8_t KBD_PIN1_KEY_CTRL_R  		= 10;
+#define KBD_PIN1_KEY_0  			 8
+#define KBD_PIN1_KEY_APOS  		 8
+#define KBD_PIN1_KEY_6  			 8
+#define KBD_PIN1_KEY_8  			 8
+#define KBD_PIN1_KEY_4  			 8
 
-const uint8_t KBD_PIN1_KEY_O  			= 9;
-const uint8_t KBD_PIN1_KEY_ASTERISK  	= 9;
-const uint8_t KBD_PIN1_KEY_T  			= 9;
-const uint8_t KBD_PIN1_KEY_U  			= 9;
-const uint8_t KBD_PIN1_KEY_R  			= 9;
-const uint8_t KBD_PIN1_KEY_W  			= 9;
+#define KBD_PIN1_KEY_EURO  		 7
 
-const uint8_t KBD_PIN1_KEY_SHIFT_R  	= 12;
-const uint8_t KBD_PIN1_KEY_SHIFT_L  	= 12;
+#define KBD_PIN1_KEY_CTRL_L  		 10
+#define KBD_PIN1_KEY_CTRL_R  		 10
 
-const uint8_t KBD_PIN1_KEY_I  			= 11;
-const uint8_t KBD_PIN1_KEY_ENTER  		= 11;
-const uint8_t KBD_PIN1_KEY_H  			= 11;
-const uint8_t KBD_PIN1_KEY_Z  			= 11;
-const uint8_t KBD_PIN1_KEY_E  			= 11;
-const uint8_t KBD_PIN1_KEY_S  			= 11;
+#define KBD_PIN1_KEY_O  			 9
+#define KBD_PIN1_KEY_ASTERISK  	 9
+#define KBD_PIN1_KEY_T  			 9
+#define KBD_PIN1_KEY_U  			 9
+#define KBD_PIN1_KEY_R  			 9
+#define KBD_PIN1_KEY_W  			 9
 
-const uint8_t KBD_PIN1_KEY_L  			= 14;
-const uint8_t KBD_PIN1_KEY_K  			= 14;
-const uint8_t KBD_PIN1_KEY_M  			= 14;
-const uint8_t KBD_PIN1_KEY_COMMA  		= 14;
+#define KBD_PIN1_KEY_SHIFT_R  	 12
+#define KBD_PIN1_KEY_SHIFT_L  	 12
 
-const uint8_t KBD_PIN1_KEY_SHARP  		= 13;
-const uint8_t KBD_PIN1_KEY_END  		= 13;
-const uint8_t KBD_PIN1_KEY_WIN_R  		= 13;
+#define KBD_PIN1_KEY_I  			 11
+#define KBD_PIN1_KEY_ENTER  		 11
+#define KBD_PIN1_KEY_H  			 11
+#define KBD_PIN1_KEY_Z  			 11
+#define KBD_PIN1_KEY_E  			 11
+#define KBD_PIN1_KEY_S  			 11
 
-const uint8_t KBD_PIN1_KEY_G  			= 16;
-const uint8_t KBD_PIN1_KEY_V  			= 16;
-const uint8_t KBD_PIN1_KEY_SPACE  		= 16;
-const uint8_t KBD_PIN1_KEY_C  			= 16;
+#define KBD_PIN1_KEY_L  			 14
+#define KBD_PIN1_KEY_K  			 14
+#define KBD_PIN1_KEY_M  			 14
+#define KBD_PIN1_KEY_COMMA  		 14
 
-const uint8_t KBD_PIN1_KEY_J  			= 15;
-const uint8_t KBD_PIN1_KEY_N  			= 15;
-const uint8_t KBD_PIN1_KEY_B  			= 15;
+#define KBD_PIN1_KEY_SHARP  		 13
+#define KBD_PIN1_KEY_END  		 13
+#define KBD_PIN1_KEY_WIN_R  		 13
 
-const uint8_t KBD_PIN1_KEY_F  			= 18;
-const uint8_t KBD_PIN1_KEY_A  			= 18;
+#define KBD_PIN1_KEY_G  			 16
+#define KBD_PIN1_KEY_V  			 16
+#define KBD_PIN1_KEY_SPACE  		 16
+#define KBD_PIN1_KEY_C  			 16
 
-const uint8_t KBD_PIN1_KEY_D  			= 17;
-const uint8_t KBD_PIN1_KEY_LOWER_THAN  	= 17;
-const uint8_t KBD_PIN1_KEY_X  			= 17;
+#define KBD_PIN1_KEY_J  			 15
+#define KBD_PIN1_KEY_N  			 15
+#define KBD_PIN1_KEY_B  			 15
 
-const uint8_t KBD_PIN1_KEY_WIN_L  		= 20;
+#define KBD_PIN1_KEY_F  			 18
+#define KBD_PIN1_KEY_A  			 18
 
-const uint8_t KBD_PIN1_KEY_ALT_L  		= 19;
-const uint8_t KBD_PIN1_KEY_ALT_R  		= 19;
+#define KBD_PIN1_KEY_D  			 17
+#define KBD_PIN1_KEY_LOWER_THAN  	 17
+#define KBD_PIN1_KEY_X  			 17
 
-const uint8_t KBD_PIN1_KEY_Y  			= 22;
+#define KBD_PIN1_KEY_WIN_L  		 20
 
-const uint8_t KBD_PIN1_KEY_FN  			= 21;
+#define KBD_PIN1_KEY_ALT_L  		 19
+#define KBD_PIN1_KEY_ALT_R  		 19
 
+#define KBD_PIN1_KEY_Y  			 22
 
-const uint8_t KBD_PIN2_KEY_F11  		= 5;  
-const uint8_t KBD_PIN2_KEY_F12  		= 8; 
-const uint8_t KBD_PIN2_KEY_F8  			= 9; 
-const uint8_t KBD_PIN2_KEY_Q  			= 11; 
-const uint8_t KBD_PIN2_KEY_F4  			= 18; 
-const uint8_t KBD_PIN2_KEY_F3  			= 22; 
-const uint8_t KBD_PIN2_KEY_F7  			= 24; 
-const uint8_t KBD_PIN2_KEY_1  			= 23;
+#define KBD_PIN1_KEY_FN  			 21
+
+#define KBD_PIN2_KEY_F11  		 5  
+#define KBD_PIN2_KEY_F12  		 8 
+#define KBD_PIN2_KEY_F8  			 9 
+#define KBD_PIN2_KEY_Q  			 11 
+#define KBD_PIN2_KEY_F4  			 18 
+#define KBD_PIN2_KEY_F3  			 22 
+#define KBD_PIN2_KEY_F7  			 24 
+#define KBD_PIN2_KEY_1  			 23
  
-const uint8_t KBD_PIN2_KEY_ESC  		= 5;  
-const uint8_t KBD_PIN2_KEY_CIRCUMFLEX  		= 8;  
-const uint8_t KBD_PIN2_KEY_F5  			= 9; 
-const uint8_t KBD_PIN2_KEY_TAB  		= 11;
-const uint8_t KBD_PIN2_KEY_F1  			= 18;
-const uint8_t KBD_PIN2_KEY_F2  			= 22;
-const uint8_t KBD_PIN2_KEY_F6  			= 24;
-const uint8_t KBD_PIN2_KEY_CAPS_LOCK  	= 23;
+#define KBD_PIN2_KEY_ESC  		 5  
+#define KBD_PIN2_KEY_CIRCUMFLEX  		 8  
+#define KBD_PIN2_KEY_F5  			 9 
+#define KBD_PIN2_KEY_TAB  		 11
+#define KBD_PIN2_KEY_F1  			 18
+#define KBD_PIN2_KEY_F2  			 22
+#define KBD_PIN2_KEY_F6  			 24
+#define KBD_PIN2_KEY_CAPS_LOCK  	 23
 
-const uint8_t KBD_PIN2_KEY_F10  		= 5 ;
-const uint8_t KBD_PIN2_KEY_F9  			= 8 ;
-const uint8_t KBD_PIN2_KEY_BACKSPACE  	= 9;
-const uint8_t KBD_PIN2_KEY_3  			= 11;
-const uint8_t KBD_PIN2_KEY_2  			= 18;
-const uint8_t KBD_PIN2_KEY_ARROW_UP  	= 22;
-const uint8_t KBD_PIN2_KEY_BREAK 		= 24;
-const uint8_t KBD_PIN2_KEY_PRINT  		= 23;
+#define KBD_PIN2_KEY_F10  		 5 
+#define KBD_PIN2_KEY_F9  			 8 
+#define KBD_PIN2_KEY_BACKSPACE  	 9
+#define KBD_PIN2_KEY_3  			 11
+#define KBD_PIN2_KEY_2  			 18
+#define KBD_PIN2_KEY_ARROW_UP  	 22
+#define KBD_PIN2_KEY_BREAK 		 24
+#define KBD_PIN2_KEY_PRINT  		 23
 
-const uint8_t KBD_PIN2_KEY_INSERT  		= 5 ;
-const uint8_t KBD_PIN2_KEY_DELETE  		= 8 ;
-const uint8_t KBD_PIN2_KEY_HOME  		= 9;
-const uint8_t KBD_PIN2_KEY_PAGE_UP  	= 11;
-const uint8_t KBD_PIN2_KEY_PAGE_DOWN  	= 18;
-const uint8_t KBD_PIN2_KEY_ARROW_RIGHT  = 22;
-const uint8_t KBD_PIN2_KEY_ARROW_LEFT  	= 24;
-const uint8_t KBD_PIN2_KEY_ARROW_DOWN  	= 23;
+#define KBD_PIN2_KEY_INSERT  		 5 
+#define KBD_PIN2_KEY_DELETE  		 8 
+#define KBD_PIN2_KEY_HOME  		 9
+#define KBD_PIN2_KEY_PAGE_UP  	 11
+#define KBD_PIN2_KEY_PAGE_DOWN  	 18
+#define KBD_PIN2_KEY_ARROW_RIGHT   22
+#define KBD_PIN2_KEY_ARROW_LEFT  	 24
+#define KBD_PIN2_KEY_ARROW_DOWN  	 23
 
-const uint8_t KBD_PIN2_KEY_UE  			= 5 ;
-const uint8_t KBD_PIN2_KEY_P  			= 8 ;
-const uint8_t KBD_PIN2_KEY_AE  			= 9	;
-const uint8_t KBD_PIN2_KEY_OE  			= 11;
-const uint8_t KBD_PIN2_KEY_MINUS  		= 18;
-const uint8_t KBD_PIN2_KEY_DOT  		= 22;
+#define KBD_PIN2_KEY_UE  			 5 
+#define KBD_PIN2_KEY_P  			 8 
+#define KBD_PIN2_KEY_AE  			 9	
+#define KBD_PIN2_KEY_OE  			 11
+#define KBD_PIN2_KEY_MINUS  		 18
+#define KBD_PIN2_KEY_DOT  		 22
 
-const uint8_t KBD_PIN2_KEY_DOLLAR  		= 10;
-const uint8_t KBD_PIN2_KEY_QUESTIONMARK = 14;
-const uint8_t KBD_PIN2_KEY_7  			= 16;
-const uint8_t KBD_PIN2_KEY_9  			= 15;
-const uint8_t KBD_PIN2_KEY_5  			= 17;
+#define KBD_PIN2_KEY_DOLLAR  		 10
+#define KBD_PIN2_KEY_QUESTIONMARK  14
+#define KBD_PIN2_KEY_7  			 16
+#define KBD_PIN2_KEY_9  			 15
+#define KBD_PIN2_KEY_5  			 17
 
-const uint8_t KBD_PIN2_KEY_0  			= 14;
-const uint8_t KBD_PIN2_KEY_APOS  		= 13;
-const uint8_t KBD_PIN2_KEY_6  			= 16;
-const uint8_t KBD_PIN2_KEY_8  			= 15;
-const uint8_t KBD_PIN2_KEY_4  			= 17;
+#define KBD_PIN2_KEY_0  			 14
+#define KBD_PIN2_KEY_APOS  		 13
+#define KBD_PIN2_KEY_6  			 16
+#define KBD_PIN2_KEY_8  			 15
+#define KBD_PIN2_KEY_4  			 17
 
-const uint8_t KBD_PIN2_KEY_EURO  		= 18;
-const uint8_t KBD_PIN2_KEY_CTRL_L  		= 22;
-const uint8_t KBD_PIN2_KEY_CTRL_R  		= 24;
+#define KBD_PIN2_KEY_EURO  		 18
+#define KBD_PIN2_KEY_CTRL_R  		 22
+#define KBD_PIN2_KEY_CTRL_L  		 24
 
-const uint8_t KBD_PIN2_KEY_O  			= 14;
-const uint8_t KBD_PIN2_KEY_ASTERISK  	= 13;
-const uint8_t KBD_PIN2_KEY_T  			= 16;
-const uint8_t KBD_PIN2_KEY_U  			= 15;
-const uint8_t KBD_PIN2_KEY_R  			= 17;
-const uint8_t KBD_PIN2_KEY_W  			= 21;
+#define KBD_PIN2_KEY_O  			 14
+#define KBD_PIN2_KEY_ASTERISK  	 13
+#define KBD_PIN2_KEY_T  			 16
+#define KBD_PIN2_KEY_U  			 15
+#define KBD_PIN2_KEY_R  			 17
+#define KBD_PIN2_KEY_W  			 21
 
-const uint8_t KBD_PIN2_KEY_SHIFT_R  	= 18;
-const uint8_t KBD_PIN2_KEY_SHIFT_L  	= 22;
+#define KBD_PIN2_KEY_SHIFT_R  	 18
+#define KBD_PIN2_KEY_SHIFT_L  	 22
 
-const uint8_t KBD_PIN2_KEY_I  			= 14;
-const uint8_t KBD_PIN2_KEY_ENTER  		= 13;
-const uint8_t KBD_PIN2_KEY_H  			= 16;
-const uint8_t KBD_PIN2_KEY_Z  			= 15;
-const uint8_t KBD_PIN2_KEY_E  			= 17;
-const uint8_t KBD_PIN2_KEY_S  			= 21;
+#define KBD_PIN2_KEY_I  			 14
+#define KBD_PIN2_KEY_ENTER  		 13
+#define KBD_PIN2_KEY_H  			 16
+#define KBD_PIN2_KEY_Z  			 15
+#define KBD_PIN2_KEY_E  			 17
+#define KBD_PIN2_KEY_S  			 21
 
-const uint8_t KBD_PIN2_KEY_L  			= 18;
-const uint8_t KBD_PIN2_KEY_K  			= 22;
-const uint8_t KBD_PIN2_KEY_M  			= 24;
-const uint8_t KBD_PIN2_KEY_COMMA  		= 23;
+#define KBD_PIN2_KEY_L  			 18
+#define KBD_PIN2_KEY_K  			 22
+#define KBD_PIN2_KEY_M  			 24
+#define KBD_PIN2_KEY_COMMA  		 23
 
-const uint8_t KBD_PIN2_KEY_SHARP  		= 18;
-const uint8_t KBD_PIN2_KEY_END  		= 22;
-const uint8_t KBD_PIN2_KEY_WIN_R  		= 24;
+#define KBD_PIN2_KEY_SHARP  		 18
+#define KBD_PIN2_KEY_END  		 22
+#define KBD_PIN2_KEY_WIN_R  		 24
 
-const uint8_t KBD_PIN2_KEY_G  			= 18;
-const uint8_t KBD_PIN2_KEY_V  			= 22;
-const uint8_t KBD_PIN2_KEY_SPACE  		= 24;
-const uint8_t KBD_PIN2_KEY_C  			= 23;
+#define KBD_PIN2_KEY_G  			 18
+#define KBD_PIN2_KEY_V  			 22
+#define KBD_PIN2_KEY_SPACE  		 24
+#define KBD_PIN2_KEY_C  			 23
 
-const uint8_t KBD_PIN2_KEY_J  			= 18;
-const uint8_t KBD_PIN2_KEY_N  			= 22;
-const uint8_t KBD_PIN2_KEY_B  			= 23;
+#define KBD_PIN2_KEY_J  			 18
+#define KBD_PIN2_KEY_N  			 22
+#define KBD_PIN2_KEY_B  			 23
 
-const uint8_t KBD_PIN2_KEY_F  			= 17;
-const uint8_t KBD_PIN2_KEY_A  			= 21;
+#define KBD_PIN2_KEY_F  			 17
+#define KBD_PIN2_KEY_A  			 21
 
-const uint8_t KBD_PIN2_KEY_D  			= 22;
-const uint8_t KBD_PIN2_KEY_LOWER_THAN  	= 24;
-const uint8_t KBD_PIN2_KEY_X  			= 23;
+#define KBD_PIN2_KEY_D  			 22
+#define KBD_PIN2_KEY_LOWER_THAN  	 24
+#define KBD_PIN2_KEY_X  			 23
 
-const uint8_t KBD_PIN2_KEY_WIN_L  		= 24;
+#define KBD_PIN2_KEY_WIN_L  		 24
 
-const uint8_t KBD_PIN2_KEY_ALT_L  		= 24;
-const uint8_t KBD_PIN2_KEY_ALT_R  		= 23;
+#define KBD_PIN2_KEY_ALT_L  		 24
+#define KBD_PIN2_KEY_ALT_R  		 23
 
-const uint8_t KBD_PIN2_KEY_Y  			= 21;
-const uint8_t KBD_PIN2_KEY_FN  			= 24;
+#define KBD_PIN2_KEY_Y  			 21
+#define KBD_PIN2_KEY_FN  			 24
 
-
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_F11  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_F12  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_F8  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_Q  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_F4  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_F3  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_F7  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_1  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_ESC  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_CIRCUMFLEX  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_F5  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_TAB  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_F1  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_F2  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_F6  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_CAPS_LOCK  	= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_F10  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_F9  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_BACKSPACE  	= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_3  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_2  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_ARROW_UP  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_BREAK 			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_PRINT  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_INSERT  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_DELETE  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_HOME  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_PAGE_UP  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_PAGE_DOWN  	= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_ARROW_RIGHT  	= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_ARROW_LEFT  	= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_ARROW_DOWN  	= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_UE  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_P  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_AE  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_OE  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_MINUS  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_DOT  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_DOLLAR  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_QUESTIONMARK  	= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_7  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_9  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_5  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_0  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_APOS  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_6  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_8  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_4  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_EURO  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_CTRL_L  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_CTRL_R  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_O  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_ASTERISK  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_T  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_U  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_R  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_W  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_SHIFT_R  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_SHIFT_L  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_I  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_ENTER  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_H  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_Z  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_E  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_S  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_L  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_K  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_M  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_COMMA  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_SHARP  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_END  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_WIN_R  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_G  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_V  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_SPACE  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_C  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_J  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_N  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_B  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_F  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_A  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_D  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_LOWER_THAN  		= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_X  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_WIN_L 			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_ALT_L 			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_ALT_R 			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_Y  			= 1;
-const uint8_t PS2_MAKEBYTE_COUNT_KEY_FN  			= 1;
 
 
 struct detect_pins
@@ -683,8 +610,6 @@ struct detect_pins
   uint8_t Pin1;
   uint8_t Pin2;
 };
-
-
 
 const detect_pins MatrixPins[KBD_REAL_KEY_COUNT] =
 {
@@ -816,16 +741,15 @@ For Part 2, use the following code
 #define Ps2MkBc_Dummy Ps2ScanCodeDummy
 #define Ps2BkBc_Dummy Ps2ScanCodeDummy
 
+
 //PS2 scan code details mapping to PS2 macros
+//The right part is taken from PS2_Details.h
 #define KBD_PS2SCANCODESEXT(VIRTNAME, PS2NAME) \
 const uint8_t PROGMEM Ps2Make_##VIRTNAME =    Ps2Mk_##PS2NAME;\
 const uint8_t PROGMEM Ps2MakeBc_##VIRTNAME =  Ps2MkBc_##PS2NAME;
 
-/*const uint8_t PROGMEM Ps2Break_##VIRTNAME =   {Ps2Bk_##PS2NAME};*/
-/*const uint8_t PROGMEM Ps2BreakBc_##VIRTNAME[] = {Ps2BkBc_##PS2NAME};*/
-
 //In many cases, the identifying part of the name is the same
-//Let's safe some typo errors before they occur.
+//Let's safe some typo errors before they occur and use a macro
 #define KBD_PS2SCANCODES(NAME) \
 KBD_PS2SCANCODESEXT(NAME,NAME)
 
@@ -952,6 +876,7 @@ KBD_PS2SCANCODESEXT(NUMLOCK_KEY_M, NUMPAD_0 )           		// If NumLock LED is a
 KBD_PS2SCANCODESEXT(NUMLOCK_KEY_DOT, NUMPAD_DECIMAL )         	// If NumLock LED is active, Code is NUMLOCK ","
 KBD_PS2SCANCODESEXT(NUMLOCK_KEY_MINUS, NUMPAD_DIVIDE )       // If NumLock LED is active, Code is NUMLOCK "/"
 
+//Used for Ps2CodeCombo
 struct KbdPs2ScanCodeDetails
 {
   uint8_t ByteCountMakeCode;
@@ -962,10 +887,8 @@ struct KbdPs2ScanCodeDetails
 #define PS2AllDetails(NAME) \
  Ps2MakeBc_##NAME,\
  Ps2Make_##NAME
- 
- 
-  
-//The full feateared list of PS code details, same order as for finding the buttons, but extended with virtual keys
+   
+//The full feateared list of PS code details, same order as for finding the buttons, but extended by virtual keys
 const KbdPs2ScanCodeDetails  Ps2CodeCombo[KBD_REAL_KEY_COUNT + KBD_VIRT_KEY_COUNT] =
 {
 //real life keys
@@ -1056,9 +979,8 @@ const KbdPs2ScanCodeDetails  Ps2CodeCombo[KBD_REAL_KEY_COUNT + KBD_VIRT_KEY_COUN
 	{PS2AllDetails(Y)},
 	{PS2AllDetails(PRINT)},	   //long scan code, not stored here
 	{PS2AllDetails(BREAK)},	  //long scan code, not staored here
-	{PS2AllDetails(DOLLAR)},  //real key that will trigger a series of scan codes
-	{PS2AllDetails(EURO)},    //real key that will trigger a series of scan codes
-	
+	{PS2AllDetails(DOLLAR)},  //real key that will need to trigger a series of scan codes
+	{PS2AllDetails(EURO)},    //real key that will need to trigger a series of scan codes
 //end of real life keys
 
 //virtual keys

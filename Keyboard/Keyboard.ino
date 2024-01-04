@@ -33,18 +33,24 @@
 KBD_DEBUG will activate the serial debug output, and as a result, mess up the timing
 */
 #define KBD_DEBUG
+//The serial port Baudrate for the debug output
+#define KBD_DEBUG_BAUDRATE 230400  //9600
+
+
 
 
 
 //The MAKE- and BREAKCODES as macros (arrays)
 #include "PS2_DETAILS.h"
 
-//This file contains details for the specific keyboard matrix. It uses the macros from PS2_DETAILS.h
+//This file contains details for the specific keyboard matrix. It uses the macros of PS2_DETAILS.h
 #include "ACER_TRAVELMATE4001WLMI_KEYBOARD_MATRIX.h"
 
 //This is the file to describe which pins of the development board are used.
 #include "PIN_ASSIGNMENTS.h"
 
+//Settings for the buttons of the Display controller. It uses the macros of PIN_ASSIGNMENTS.h
+#include "Display_controller.h"
 /*
 Library to emulate a PS/2 device. Written for keyboards with US layout.
 Provided enums ScanCodes/SpecialScanCodes do not match to non-US keyboards. 
@@ -64,12 +70,12 @@ char DbgBuf1[30], DbgBuf2[4], DbgBuf3[4];
 uint8_t DbgLoopStart = 0;
 #endif
 
+unsigned long KeyboardRepeatIntervall = 500;  //ms
 //Remember the last pressed key, for implementing key repeat
 uint8_t LastPressedKey;
 //Remember when this key was last pressed
 unsigned long LastPressedKeyTimestamp;
 //The repeat interval
-unsigned long KeyboardRepeatIntervalInMs = 1000;  //ms
 
 //This is used by DetectPressedKeys
 bool CurrentlyPressedKeys[KBD_REAL_KEY_COUNT];
@@ -81,9 +87,9 @@ bool PreviouslyPressedKeys[KBD_REAL_KEY_COUNT];
 */
 void setup() {
 #ifdef KBD_DEBUG
-  //initialize serial communication at 9600 bits per second:
+  //initialize serial communication at certain bits per second:
   //This is the debug output.
-  Serial.begin(57600);
+  Serial.begin(KBD_DEBUG_BAUDRATE);
   Serial.println("entering setup()...");
 #endif
   //Prepare the output pins for LED and Display buttons.
@@ -117,12 +123,16 @@ void loop() {
 
 
   //backup the old detected data
-  while (index--) *(PreviouslyPressedKeys + index) = *(CurrentlyPressedKeys + index);
+  //while (index--) *(PreviouslyPressedKeys + index) = *(CurrentlyPressedKeys + index);
+  for (index = 0; index < KBD_REAL_KEY_COUNT; index++) {
+    PreviouslyPressedKeys[index] = CurrentlyPressedKeys[index];
+  }
 #ifdef KBD_DEBUG
   DbgTimeStart = micros();
 #endif
   //get new data
   DetectPressedKeys();
+  delay(5);
 #ifdef KBD_DEBUG
   DbgTimeEnd = micros();
 #endif
@@ -130,28 +140,48 @@ void loop() {
   for (index = 0; index < KBD_REAL_KEY_COUNT; index++) {
     if (PreviouslyPressedKeys[index] != CurrentlyPressedKeys[index]) {
 
+
+
+
+
 #ifdef KBD_DEBUG
       //change detected
       if (CurrentlyPressedKeys[index]) {
-        Serial.print(F("pressed: "));
+
+        Serial.print(F("\r\npressed: "));
       } else {
-        Serial.print(F("released: "));
+        Serial.print(F("\r\nreleased: "));
       }
 
       strcpy_P(DbgBuf1, (char*)pgm_read_word(&(HumanReadableDecoder[index])));
 
-     // Serial.print(F("Key#"));
-     // Serial.print(itoa(index, DbgBuf2, 10));
-     // Serial.print(F(",Pin1="));
-     // Serial.print(itoa(MatrixPins[index].Pin1, DbgBuf2, 10));
-     // Serial.print(F(",Pin2="));
-     // Serial.print(itoa(MatrixPins[index].Pin2, DbgBuf3, 10));
-     // Serial.print(F(",HRLabel='"));
-      Serial.println(DbgBuf1);
-      //Serial.print(F("' ScanDuration(µs)"));
-      //Serial.print(itoa(DbgTimeEnd - DbgTimeStart, DbgBuf2, 10));
+      //Serial.print(F("Key#"));
+      //Serial.print(itoa(index, DbgBuf2, 10));
+      //Serial.print(F(",Pin1="));
+      //Serial.print(itoa(MatrixPins[index].Pin1, DbgBuf2, 10));
+      //Serial.print(F(",Pin2="));
+      //Serial.print(itoa(MatrixPins[index].Pin2, DbgBuf3, 10));
+      //Serial.print(F(",HRLabel='"));
+
+      Serial.print("'");
+      Serial.print(DbgBuf1);
+      Serial.print("'");
+      //  Serial.print(F("' ScanDuration(µs)"));
+      //  Serial.print(itoa(DbgTimeEnd - DbgTimeStart, DbgBuf2, 10));
+      Serial.println("");
+#endif
+
+      if (CurrentlyPressedKeys[index]) {
+
+        //remember the last pressed key, for repeating
+        LastPressedKey = index;
+        LastPressedKeyTimestamp = millis();
+#ifdef KBD_DEBUG
+        Serial.print("last pressed key noted for repeat:");
+        Serial.print(LastPressedKey);
 
 #endif
+      }
     }
   }
 #ifdef KBD_DEBUG
@@ -180,6 +210,7 @@ void DetectPressedKeys() {
     SendBreakCode = 0;
     Ps2CodeDetail = SCANID_MK_DUMMY;
 
+
     //The two pins with the specific button in between.
     OutPin = MatrixPins[ScanIndex].Pin1;
     InPin = MatrixPins[ScanIndex].Pin2;
@@ -191,18 +222,35 @@ void DetectPressedKeys() {
     SetKbdPinMode(InPin, INPUT_PULLUP);
 
     //Without a small delay, keys may be accidently reported as pressed, even without any user action.
-    // delayMicroseconds(10);
+    // delayMicroseconds(5);
 
     //get the result (a bool), but invert it as a pressed key reads as a LOW from the OutPin.
     Result = !GetKbdPin(InPin);
     CurrentlyPressedKeys[ScanIndex] = Result;
 
-    if ((Result) && (LastPressedKey == ScanIndex) && (ScanIndex != KBD_KEY_FN)) {
-      //A key is already pressed
-      Now = millis();
-      if ((LastPressedKeyTimestamp + KeyboardRepeatIntervalInMs) < Now) {
-        //release the key to trigger it again
-        CurrentlyPressedKeys[ScanIndex] = LOW;
+    if ((Result == LOW) && (LastPressedKey == ScanIndex) && (ScanIndex != KBD_KEY_FN)) {
+
+      if ((LastPressedKey == ScanIndex) && (ScanIndex != KBD_KEY_FN)) {
+        if (Result == 1) {
+          //That key is already pressed
+          Now = millis();
+          if ((Now - LastPressedKeyTimestamp) > KeyboardRepeatIntervall) {
+            //release the key to trigger it again
+            CurrentlyPressedKeys[ScanIndex] = LOW;
+#ifdef KBD_DEBUG
+            Serial.print("\r\nreleased the key to enable to trigger it again:");
+            Serial.print(ScanIndex);
+#endif
+            LastPressedKey = KBD_KEY_UNDEFINED; 
+          } else {
+            //That key is released meanwhile
+            LastPressedKey = KBD_KEY_UNDEFINED;  
+#ifdef KBD_DEBUG
+            Serial.print("\r\nremoved repeat 'marking' from key:");
+            Serial.print(ScanIndex);
+#endif
+          }
+        }
       }
     }
 
@@ -212,9 +260,6 @@ void DetectPressedKeys() {
         //Key is pressed, send MakeCode
         SendMakeCode = 1;
 
-        //remember the last pressed button, for repeating
-        LastPressedKey = ScanIndex;
-        LastPressedKeyTimestamp = millis();
 
       } else {
         //key is release, send BreakCode
@@ -293,27 +338,33 @@ void DetectPressedKeys() {
         }
         if ((SendMakeCode == 1) || (SendBreakCode == 1)) {
 
+
+#ifdef KBD_DEBUG
+
+          Serial.print("\r\n\r\nScanIndex: ");
+          Serial.print(ScanIndex);
+          Serial.print(" OutPin: ");
+          Serial.print(" OutPin: ");
+          Serial.print(OutPin);
+          Serial.print(" InPin: ");
+          Serial.print(InPin);
+          Serial.print(" Result: ");
+          Serial.print(Result);
+          Serial.print(" CurrentlyPressedKeys[i]: ");
+          Serial.print(CurrentlyPressedKeys[ScanIndex]);
+          Serial.print(" PreviouslyPressedKeys[i]: ");
+          Serial.print(PreviouslyPressedKeys[ScanIndex]);
+
+
+#endif
+
           if ((Ps2CodeDetail == SCANID_MK_DUMMY) || (Ps2CodeDetail == SCANID_BK_DUMMY)) {
             //The button is for internal use
             TriggerDisplayButton(Ps2CodeDetail, VirtKeyIndex);
           } else {
             //The button needs to cause some PS/2 activity
             SendScanCodeOverPs2(Ps2CodeFragment, Ps2CodeDetail, VirtKeyIndex);  //
-         }
-
-#ifdef KBD_DEBUG
-
-/*          Serial.print("ScanIndex: ");
-          Serial.print(ScanIndex);
-          Serial.print(" OutPin: ");
-          Serial.print(OutPin);
-          Serial.print(" InPin: ");
-          Serial.print(InPin);
-          Serial.print(" Result: ");
-          Serial.println(Result);
-*/
-
-#endif
+          }
         }
       }
     }  //if (PreviouslyPressedKeys[index] != CurrentlyPressedKeys[index])
@@ -523,13 +574,14 @@ void TestAllDspKeys() {
 */
 void SendScanCodeOverPs2(uint8_t ScanCodeFragment, uint8_t ScanCodeId, uint8_t VirtKey) {
 #ifdef KBD_DEBUG
-  Serial.print("PS2: code 0x");
+
+  Serial.print("\r\nPS2: code 0x");
   Serial.print(ScanCodeFragment, HEX);
   Serial.print(", Detail 0x");
   Serial.print(ScanCodeId, HEX);
   Serial.print(", Key(dez) ");
 
-  Serial.println(VirtKey);
+  Serial.print(VirtKey);
 
 #endif
 
