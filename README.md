@@ -1,6 +1,8 @@
 # PiBook_on_AcerTravelMate4001
 A dead Acer Travelmate 4001 WLMI may become alive again with a "Raspberry Pi heart" in it
 
+![image](Overview.png)
+    
 There are easier ways to get a so-called PiBook, but I want to figure it out how to do this. 
 
 My plan:
@@ -8,7 +10,6 @@ My plan:
 a) If possible use the housing of the TravelMate. But maybe there is not enough space.
   - Todo: measure the available space inside the housing and record it here.
 
-    ![image](Overview.png)
 
 ## Details of a) can be found in folder \housing if the work is started
 
