@@ -26,7 +26,9 @@ b) Use the existing keyboard matrix (german layout, 89 keys, curved)
   - ToDo: Add a photo of the layout and a wiring schema
   - ToDo: Online Keyboard Test shows that (virtual) Numpad is not working at all. The affected Code runs side by side with Fn-handling, which works fine. Wrong codes?
   
-  Pin count: Matrix + LEDs + PS2 + DisplayAdapterKeys = 24(in/out) + 3(out) + 2(in/out) + 5(out) = 34. 
+  Pin count: Matrix + LEDs + PS2 + DisplayAdapterKeys = 24(in/out) + 3(out) + 2(in/out) + 5(out) = 34 I/O Pins.
+  Memory Footprint: First working Version (2024-01-04) uses 4218 Bytes Flash and 640 Bytes RAM if macro KBD_DEBUG is not set.
+  
 ## Details of b) can be found in folder \keyboard
 
 ![image](Keyboard/Keyboard_on_board.JPEG)
