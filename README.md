@@ -8,6 +8,8 @@ My plan:
 a) If possible use the housing of the TravelMate. But maybe there is not enough space.
   - Todo: measure the available space inside the housing and record it here.
 
+    ![image](Overview.png)
+
 ## Details of a) can be found in folder \housing if the work is started
 
 b) Use the existing keyboard matrix (german layout, 89 keys, curved)
