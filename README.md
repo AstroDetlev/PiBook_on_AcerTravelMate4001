@@ -15,9 +15,9 @@ b) Use the existing keyboard matrix (german layout, 89 keys, curved)
   Currently in use is a full size Arduino Mega2560. Maybe a miniaturized version will be the final version. UART is not needed in the final version.
   current state:
   - Done: It detects all 89 keys (needs 24pins)
-  - Done: Temporary output of a detected key via UART (@9k6)
+  - Done: Temporary output of a detected key via UART
   - Done: scan time for the whole keyboard is less than 3ms. No debouncing hard- or software and no delay in use. 
-  - Done: Fn-Detection for debug out
+  - Done: Fn-Detection for "special keys" and replacement of the ScreenControl buttons (Fn+F5 = "Power", Fn+F6 = Menu, Fn+F7 = Auto, Fn+ARROW_LEFT = DOWN, Fn+ARROW_RIGHT = UP  
   - Done: key repeat
   - Done: Integrate PS/2 Library for becoming a "homemade PS/2 Keyboard".
   - Done: Code selects the right PS/2 scan codes
