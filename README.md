@@ -28,6 +28,8 @@ b) Use the existing keyboard matrix (german layout, 89 keys, curved)
   
   Pin count: Matrix + LEDs + PS2 + DisplayAdapterKeys = 24(in/out) + 3(out) + 2(in/out) + 5(out) = 34. 
 ## Details of b) can be found in folder \keyboard
+
+![image](Keyboard/Keyboard_on_board.JPEG)
   
 c) Use the existing Touchpad (TM42PUF), PS/2 out
   As this is already a PS/2 device, it is planned to use a PS/2 to USB converter, which shall handle the "homemade PS/2 keyboard", too.
