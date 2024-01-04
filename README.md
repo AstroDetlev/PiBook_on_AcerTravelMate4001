@@ -21,10 +21,10 @@ b) Use the existing keyboard matrix (german layout, 89 keys, curved)
   - Done: key repeat
   - Done: Integrate PS/2 Library for becoming a "homemade PS/2 Keyboard".
   - Done: Code selects the right PS/2 scan codes
-     
-  - ToDo: Add a photo of the layout and the wiring
+  - Done: Control Keyboard LEDs via PS2 signals
+    
+  - ToDo: Add a photo of the layout and a wiring schema
   - ToDo: Online Keyboard Test shows that (virtual) Numpad is not working at all. The affected Code runs side by side with Fn-handling, which works fine. Wrong codes?
-  - ToDo: Control Keyboard LEDs via PS2 signals
   
   Pin count: Matrix + LEDs + PS2 + DisplayAdapterKeys = 24(in/out) + 3(out) + 2(in/out) + 5(out) = 34. 
 ## Details of b) can be found in folder \keyboard
