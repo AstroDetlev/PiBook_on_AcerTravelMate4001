@@ -32,7 +32,7 @@
 /*
 KBD_DEBUG will activate the serial debug output, and as a result, mess up the timing
 */
-#define KBD_DEBUG
+//#define KBD_DEBUG
 //The serial port Baudrate for the debug output
 #define KBD_DEBUG_BAUDRATE 230400  //9600
 
@@ -132,7 +132,7 @@ void loop() {
 #endif
   //get new data
   DetectPressedKeys();
-  delay(5);
+  //delay(5);
 #ifdef KBD_DEBUG
   DbgTimeEnd = micros();
 #endif
@@ -190,6 +190,18 @@ void loop() {
     DbgLoopStart = 1;
   }
 #endif
+
+  //Ps2dev
+  //Handle PS2 communication and react to keyboard led change
+  //This should be done at least once each 10ms
+
+  if(keyboard.keyboard_handle(&leds)) {
+#ifdef KBD_DEBUG
+        Serial.print("\r\nKeyboard LEDs change:");
+        Serial.print(leds, HEX);
+#endif
+    SetKeyboardLEDs(leds);
+  }
 }
 
 /*
