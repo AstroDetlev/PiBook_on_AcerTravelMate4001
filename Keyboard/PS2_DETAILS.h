@@ -194,30 +194,29 @@ Makecodes
 #define Ps2Mk_NUMPAD_ENTER 		  /*0xE0,*/ 0x5A 
 
 //ACPI Scancodes
-#define Ps2Mk_AcpiPower /*0xE0,*/ 0x5E 
-#define Ps2Mk_AcpiSleep /*0xE0,*/ 0x5F 
-#define Ps2Mk_AcpiWake  /*0xE0,*/ 0x63  
+#define Ps2Mk_AcpiPower /*0xE0,*/ 0x37 
+#define Ps2Mk_AcpiSleep /*0xE0,*/ 0x3f 
+#define Ps2Mk_AcpiWake  /*0xE0,*/ 0x5e  
 
 //Multimedia Scancodes 
-#define Ps2Mk_MmNextTrack 		  /*0xE0,*/ 0x19
-#define Ps2Mk_MmPreviousTrack 	/*0xE0,*/ 0x10
-#define Ps2Mk_MmStop 			      /*0xE0,*/ 0x24
-#define Ps2Mk_MmPlayPause 		  /*0xE0,*/ 0x22
-#define Ps2Mk_MmMute 			      /*0xE0,*/ 0x20
-#define Ps2Mk_MmVolumeUp 		    /*0xE0,*/ 0x30
-#define Ps2Mk_MmVolumeDown 		  /*0xE0,*/ 0x2e
-#define Ps2Mk_MmMediaSelect 	  /*0xE0,*/ 0x6d
-#define Ps2Mk_MmEmail 			    /*0xE0,*/ 0x6c
-#define Ps2Mk_MmCalculator 		  /*0xE0,*/ 0x21
-#define Ps2Mk_MmMyComputer 		  /*0xE0,*/ 0x6b
-#define Ps2Mk_MmWwwSearch 		  /*0xE0,*/ 0x65
-#define Ps2Mk_MmWwwHome 		    /*0xE0,*/ 0x32
-#define Ps2Mk_MmWwwBack 		    /*0xE0,*/ 0x6a
-#define Ps2Mk_MmWwwForward 		  /*0xE0,*/ 0x69
-#define Ps2Mk_MmWwwStop 		    /*0xE0,*/ 0x68
-#define Ps2Mk_MmWwwRefresh 		  /*0xE0,*/ 0x67
-#define Ps2Mk_MmWwwFavorites 	  /*0xE0,*/ 0x66
-
+#define Ps2Mk_MmNextTrack 		  /*0xE0,*/ 0x4d
+#define Ps2Mk_MmPreviousTrack 	/*0xE0,*/ 0x15
+#define Ps2Mk_MmStop 			      /*0xE0,*/ 0x3b
+#define Ps2Mk_MmPlayPause 		  /*0xE0,*/ 0x34
+#define Ps2Mk_MmMute 			      /*0xE0,*/ 0x23
+#define Ps2Mk_MmVolumeUp 		    /*0xE0,*/ 0x32
+#define Ps2Mk_MmVolumeDown 		  /*0xE0,*/ 0x21
+#define Ps2Mk_MmMediaSelect 	  /*0xE0,*/ 0x50
+#define Ps2Mk_MmEmail 			    /*0xE0,*/ 0x48
+#define Ps2Mk_MmCalculator 		  /*0xE0,*/ 0x2b
+#define Ps2Mk_MmMyComputer 		  /*0xE0,*/ 0x40
+#define Ps2Mk_MmWwwSearch 		  /*0xE0,*/ 0x10
+#define Ps2Mk_MmWwwHome 		    /*0xE0,*/ 0x3a
+#define Ps2Mk_MmWwwBack 		    /*0xE0,*/ 0x38
+#define Ps2Mk_MmWwwForward 		  /*0xE0,*/ 0x30
+#define Ps2Mk_MmWwwStop 		    /*0xE0,*/ 0x28
+#define Ps2Mk_MmWwwRefresh 		  /*0xE0,*/ 0x20
+#define Ps2Mk_MmWwwFavorites 	  /*0xE0,*/ 0x18
 
   /*
   Makecode byte counts

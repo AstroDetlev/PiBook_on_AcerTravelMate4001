@@ -58,7 +58,7 @@ Doesn't matter, we will provide the right numbers
 */
 #include <ps2dev.h>
 PS2dev keyboard(PS2_CLOCK, PS2_DATA);  //clock + data pins
-
+unsigned char Ps2Leds;  //ps2dev
 
 
 #ifdef KBD_DEBUG
@@ -111,8 +111,9 @@ void setup() {
 /*
   the loop routine runs over and over again forever:
 */
+
 void loop() {
-  unsigned char leds;  //ps2dev
+
   uint8_t index = KBD_REAL_KEY_COUNT;
 
 #ifdef KBD_DEBUG
@@ -195,12 +196,12 @@ void loop() {
   //Handle PS2 communication and react to keyboard led change
   //This should be done at least once each 10ms
 
-  if(keyboard.keyboard_handle(&leds)) {
+  if(keyboard.keyboard_handle(&Ps2Leds)) {
 #ifdef KBD_DEBUG
         Serial.print("\r\nKeyboard LEDs change:");
-        Serial.print(leds, HEX);
+        Serial.print(Ps2Leds, HEX);
 #endif
-    SetKeyboardLEDs(leds);
+    SetKeyboardLEDs(Ps2Leds);
   }
 }
 
@@ -290,10 +291,7 @@ void DetectPressedKeys() {
       }
 
       //deal with Num Lock status
-      bool NumLockStatus;
-      NumLockStatus = GetKbdLedPin(BITVAL_NUM_LOCK_LED);
-
-      if (KeyboardLEDPin[NumLockStatus]) {
+      if (Ps2Leds & BITVAL_NUM_LOCK_LED) {
         if ((ScanIndex >= KBD_KBD_NUMLOCK_DEPENDENT_END_INDEX) && (ScanIndex <= NUMLOCK_DEPENDENT_END_INDEX)) {
           VirtKeyIndex = ScanIndex + KBD_NUMLOCK_ACTIVATED_OFFSET;
         }
@@ -348,6 +346,7 @@ void DetectPressedKeys() {
               }
           }
           Ps2CodeFragment = Ps2CodeCombo[VirtKeyIndex].MakeCode;
+          
         }
         if ((SendMakeCode == 1) || (SendBreakCode == 1)) {
 
@@ -458,11 +457,7 @@ void SetKbdLedPin(uint8_t PinNumber, bool OutVal) {
   SetKbdLedPinMode(PinNumber, OUTPUT);
   digitalWrite(KeyboardLEDPin[PinNumber], OutVal);
 }
-bool GetKbdLedPin(uint8_t PinNumber) {
-  bool PinValue;
-  PinValue = digitalRead(KeyboardLEDPin[PinNumber]);
-  return PinValue;
-}
+
 
 void SetKbdLedPinMode(uint8_t PinNumber, uint8_t PinMode) {
   pinMode(KeyboardLEDPin[PinNumber], PinMode);
