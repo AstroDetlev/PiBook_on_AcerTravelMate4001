@@ -209,14 +209,13 @@ void loop() {
 */
 void DetectPressedKeys() {
   uint8_t ScanIndex, ScanByteCount, VirtKeyIndex, OutPin, InPin, Ps2CodeFragment, Ps2CodeDetail;
-  bool Result, FnDependend, NumLockDependend, SendMakeCode, SendBreakCode;
+  bool Result, FnDependend, SendMakeCode, SendBreakCode;
   unsigned long Now;
 
   //over all keys
   for (ScanIndex = 0; ScanIndex < KBD_REAL_KEY_COUNT; ScanIndex++) {
     //init
     FnDependend = 0;
-    NumLockDependend = 0;
     VirtKeyIndex = 0;
     SendMakeCode = 0;
     SendBreakCode = 0;
@@ -291,9 +290,11 @@ void DetectPressedKeys() {
       }
 
       //deal with Num Lock status
-      if (KeyboardLEDPin[KBD_CAPS_LOCK]) {
+      bool NumLockStatus;
+      NumLockStatus = GetKbdLedPin(BITVAL_NUM_LOCK_LED);
+
+      if (KeyboardLEDPin[NumLockStatus]) {
         if ((ScanIndex >= KBD_KBD_NUMLOCK_DEPENDENT_END_INDEX) && (ScanIndex <= NUMLOCK_DEPENDENT_END_INDEX)) {
-          NumLockDependend = 1;
           VirtKeyIndex = ScanIndex + KBD_NUMLOCK_ACTIVATED_OFFSET;
         }
       }
@@ -456,6 +457,11 @@ void SetKbdPinMode(uint8_t PinNumber, uint8_t PinMode) {
 void SetKbdLedPin(uint8_t PinNumber, bool OutVal) {
   SetKbdLedPinMode(PinNumber, OUTPUT);
   digitalWrite(KeyboardLEDPin[PinNumber], OutVal);
+}
+bool GetKbdLedPin(uint8_t PinNumber) {
+  bool PinValue;
+  PinValue = digitalRead(KeyboardLEDPin[PinNumber]);
+  return PinValue;
 }
 
 void SetKbdLedPinMode(uint8_t PinNumber, uint8_t PinMode) {
