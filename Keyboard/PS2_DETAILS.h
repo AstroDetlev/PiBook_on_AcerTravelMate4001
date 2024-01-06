@@ -68,7 +68,7 @@ and returns an ACK.
 Keyboard Disable - Resets the keyboard, disables the keyboard 
 (key codes will not be transmitted) and returns an ACK.
 */
-#define Ps2H2K_KeyboardEnable 		0xF5
+#define Ps2H2K_KeyboardDisable 		0xF5
 
 /*
 Resend - Upon receipt of the resend command the keyboard will retransmit the last byte sent.

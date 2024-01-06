@@ -209,14 +209,14 @@ void loop() {
   Determines the currently pressed keys. The result is the array of bool CurrentlyPressedKeys
 */
 void DetectPressedKeys() {
-  uint8_t ScanIndex, ScanByteCount, VirtKeyIndex, OutPin, InPin, Ps2CodeFragment, Ps2CodeDetail;
-  bool Result, FnDependend, SendMakeCode, SendBreakCode;
+  uint8_t ScanIndex, /*ScanByteCount,*/ VirtKeyIndex, OutPin, InPin, Ps2CodeFragment, Ps2CodeDetail;
+  bool Result, /*FnDependend,*/ SendMakeCode, SendBreakCode;
   unsigned long Now;
 
-  //over all keys
+  //over all keys 
   for (ScanIndex = 0; ScanIndex < KBD_REAL_KEY_COUNT; ScanIndex++) {
     //init
-    FnDependend = 0;
+    //FnDependend = 0;
     VirtKeyIndex = 0;
     SendMakeCode = 0;
     SendBreakCode = 0;
@@ -285,7 +285,7 @@ void DetectPressedKeys() {
       if (CurrentlyPressedKeys[KBD_KEY_FN]) {
 
         if ((ScanIndex >= KBD_FN_DEPENDENT_START_INDEX) && (ScanIndex <= KBD_FN_DEPENDENT_END_INDEX)) {
-          FnDependend = 1;
+          //FnDependend = 1;
           VirtKeyIndex = ScanIndex + KBD_FN_ACTIVATED_OFFSET;
         }
       }

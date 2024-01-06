@@ -7,8 +7,8 @@
 */
 
 //Available pinouts. Activate only one
-//#define PINOUT_TEENSY_PP_2
-#define PINOUT_ARDUINO_MEGA2560
+#define PINOUT_TEENSY_PP_2
+//#define PINOUT_ARDUINO_MEGA2560
 
 #if defined(PINOUT_ARDUINO_MEGA2560) || defined(PINOUT_TEENSY_PP_2)
 	//at least one is active
