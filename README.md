@@ -78,7 +78,7 @@ d) Use the existing screen (1280x800), 15.x inches, "QDI N15W Rev4")
   
   Test with Multimeter: All 5 buttons cause just a simple short to the ground. As the tiny buttons themself can not handly heavy load, I do not expect high current here. 
   Some general purpose NPN Transistors wired as an emitter base circuit with a flyback diode and a base resistor should do the job. Optocoupler are not needed and would 
-  not improve the reliability, as ground is still shared between Keybaord µC and ScreenControl.
+  not improve the reliability, as ground is still shared between Keyboard µC and ScreenControl.
   
   The Keyboard software is meanwhile prepared to control 5 dedicated I/O lines. For a first go, these buttons are used
   - Fn + F5 = "Power"
