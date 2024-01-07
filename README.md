@@ -37,16 +37,23 @@ b) Use the existing keyboard matrix (german layout, 89 keys, slightly curved)
 ![image](Keyboard/Keyboard_on_board.JPEG)
 ![image](Keyboard/Keyboard_Teensy_connected.jpg)
   
-c) Use an existing Touchpad (TM42PUF), PS/2 out
+c) Use the existing Touchpad (TM42PUF), PS/2 out
   As this is already a PS/2 device, it is planned to use a PS/2 to USB converter, which shall handle the "homemade PS/2 keyboard", too.
   These converters look huge, but once pulled out of their housing, they are at the size of an SDCard.
   It is not expected to write any code for this task. The right wiring and maybe some glue logic shall do the job.
-  I've opened such a converter, and it does not contain pullup-resistors for PS/2. Need to add this to the keyboard and the touchpad.
-  Check with an Oscilloskope. Compare buyed Keyboard/Mouse signals with this homemmade stuff. 
-  - ToDo: Wire Touchpad to PS/2 input of the converter
-  - ToDo: add Pullup resistor
-  - ToDo: Check signals with Oscilloskope / Digital Analyser, compare with other Mouse
- 
+  After some use of G**gle, I found a straight foreward video with description how to wire this. Serch Youtube for 
+  "How to find pinout for Touchpad/Pointing Stick & connect to Arduino - Synaptics". Instead of using the fiddly flat cable connector,
+  the wires can be soldered directly to the PCB using some golden test pads, having names that start with "T". 
+  Adding a 4 pin connector with a 2.54 mm spacing glued to the PCB should be no problem.
+  
+  Working wiring is as follows:
+    - +5V at T22
+    - Ground at T23
+    - Clock at T10
+    - Data at T11
+As this does not influence the keyboard software, there is no special release for this planned. Maybe there will, 
+if I notice how handy it would be to turn of the Touchpad via Fn + some key. This would need at least 1 addional I/O pin.
+  
 ## Details of c) can be found in folder \Touchpad if the work is started
 
 d) Use the existing screen (1280x800), 15.x inches, "QDI N15W Rev4")
@@ -55,6 +62,10 @@ d) Use the existing screen (1280x800), 15.x inches, "QDI N15W Rev4")
   This needs no code if the keys of that PCB are used. But a smarter solution would be to replace these keys by some output lines of the arduino which is
   already used by the keyboard matrix. Maybe Fn+whatever can trigger such a output line to emulate that keypress.
   Optocoupler to isolate or "Open collector output" with bipolar transistors? Test without µC.
+  
+  Test with Multimeter: All 5 buttons cause just a simple short to the ground. As the tiny buttons themself can not handly heavy load, I do not expect high current here. 
+  Some general purpose NPN Transistors wired as an emitter base circuit with a flyback diode and a base resistor should do the job. Optocoupler are not needed and would 
+  not improve the reliability, as ground is still shared between Keybaord µC and ScreenControl.
   
   The Keyboard software is meanwhile prepared to control 5 dedicated I/O lines. For a first go, these buttons are used
   - Fn + F5 = "Power"
