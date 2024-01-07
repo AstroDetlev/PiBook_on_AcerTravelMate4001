@@ -30,10 +30,18 @@ b) Use the existing keyboard matrix (german layout, 89 keys, slightly curved).
    
   
   Pin count: Matrix + LEDs + PS2 + DisplayAdapterKeys = 24(in/out) + 3(out) + 2(in/out) + 5(out) = 34 I/O Pins.
+  Enable/Disbale Touchpad will need 1 additional I/O Pin.
   Memory Footprint: Less than 4,5 kBytes Flash and 640 Bytes RAM if macro KBD_DEBUG is not set.
-
+  If your µC provides that much I/O, it probably also provides enough memory. 
   Update to b) with Version 0.1.1: The keyboard.ino code works on a Teensy ++2.0 as good as on a MEGA 2560. As the Teensy ++2.0 is the platform that will be used in that laptop case because of the smaller PCB, 
   there is no advantage on testing it with an Arduino MEGA 2560 in the future. I will focus on Teensy ++2.0 therefore.
+
+Adaption to other keyboards or other Arduinos??? 
+All the details about the keyboard are in "ACER_TRAVELMATE4001WLMI_KEYBOARD_MATRIX.h". 
+The I/O pins in use are described in PIN_ASSIGNMENTS.h.  
+You will need an Arduino with many I/O, for example the classic Arduino Mega or the Mega Pro Mini.
+As the PS/2 protocoll runs at 5V, Arduino Mega Pro 3.3V or Arduino Due will need some 5V-to-3,3V Levelshifter for the PS/2 Interface.
+Arduino Mega Pro 3.3V also runs at 8MHz only, which is half the speed of the other Arduino MEGAs.
  
 ## Details of b) can be found in folder \keyboard
 
@@ -83,7 +91,7 @@ d) Use the existing screen (1280x800), 15.x inches, "QDI N15W Rev4")
   Meanwhile I have a Raspberry 3B+. Building a C64 Laptop using BMC64 sounds kinda fun...
 
   - Done: Test with existing Raspberry Pi zero. Picture is shown. PCB works and can be powered using a 12V/2A power supply.
-  - ToDo: Prepare bigger 12V Power supply and 5V Step down converter for thw Raspberry Pi 3 
+  - ToDo: Prepare bigger 12V Power supply and 5V Step down converter for the Raspberry Pi 3 
   - ToDo: build data cable between display and board if needed.
 
 ## Details of d) can be found in folder \ScreenController if the work is started
