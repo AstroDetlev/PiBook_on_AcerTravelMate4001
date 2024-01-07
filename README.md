@@ -57,7 +57,7 @@ c) Use the existing Touchpad (TM42PUF), PS/2 out
 
 As this does not influence the keyboard software, currently there is no special release for this.
 But be able to enable/disable the Touchpad is quite useful for people like me, who always accidently touch the Touchpad with their thumbs while writing with 6 fingers only,
-resulting an writing the right words at the wrong place. Maybe disabling(grounding) the data or clock pin is the way to do that?
+resulting in writing the right words at the wrong place. Maybe disabling(grounding) the data or clock pin is the way to do that?
   
 ## Details of c) can be found in folder \Touchpad if the work is started
 
