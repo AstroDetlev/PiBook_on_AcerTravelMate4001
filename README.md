@@ -47,12 +47,14 @@ c) Use the existing Touchpad (TM42PUF), PS/2 out
   Adding a 4 pin connector with a 2.54 mm spacing glued to the PCB should be no problem.
   
   Working wiring is as follows:
-    - +5V at T22
-    - Ground at T23
-    - Clock at T10
-    - Data at T11
-As this does not influence the keyboard software, there is no special release for this planned. Maybe there will, 
-if I notice how handy it would be to turn of the Touchpad via Fn + some key. This would need at least 1 addional I/O pin.
+- +5V at T22
+- Ground at T23
+- Clock at T10
+- Data at T11
+
+As this does not influence the keyboard software, currently there is no special release for this.
+But be able to enable/disable the Touchpad is quite useful for people like me, who always accidently touch the Touchpad with their thumbs while writing with 6 fingers only,
+resulting an writing the right words at the wrong place. Maybe disabling(grounding) the data or clock pin is the way to do that?
   
 ## Details of c) can be found in folder \Touchpad if the work is started
 
