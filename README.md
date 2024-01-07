@@ -94,6 +94,8 @@ d) Use the existing screen (1280x800), 15.x inches, "QDI N15W Rev4")
   - ToDo: Prepare bigger 12V Power supply and 5V Step down converter for the Raspberry Pi 3 
   - ToDo: build data cable between display and board if needed.
 
+  New fun: the Invertor provided with the ScreenController does not fit into the laptop lid. Need to figure out how to use the old one.
+  
 ## Details of d) can be found in folder \ScreenController if the work is started
 
 e) Don't use the internal DVD-Writer
