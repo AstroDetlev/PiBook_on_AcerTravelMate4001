@@ -15,7 +15,7 @@ a) If possible use the housing of the TravelMate. But maybe there is not enough 
 
 ## Details of a) can be found in folder \housing if the work is started
 
-b) Use the existing keyboard matrix (german layout, 89 keys, slightly curved)
+b) Use the existing keyboard matrix (german layout, 89 keys, slightly curved).
   Needs one of the bigger Arduinos with many I/O to deal with the 24 matrix pins.
   Currently in use is a full size Arduino Mega2560. A Teensy ++2.0 is also AVR-based and the source is prepared for this tiny 2nd board.
   current state:
@@ -30,8 +30,11 @@ b) Use the existing keyboard matrix (german layout, 89 keys, slightly curved)
    
   
   Pin count: Matrix + LEDs + PS2 + DisplayAdapterKeys = 24(in/out) + 3(out) + 2(in/out) + 5(out) = 34 I/O Pins.
-  Memory Footprint: First working Version (2024-01-04) uses 4218 Bytes Flash and 640 Bytes RAM if macro KBD_DEBUG is not set.
-  
+  Memory Footprint: Less than 4,5 kBytes Flash and 640 Bytes RAM if macro KBD_DEBUG is not set.
+
+  Update to b) with Version 0.1.1: The keyboard.ino code works on a Teensy ++2.0 as good as on a MEGA 2560. As the Teensy ++2.0 is the platform that will be used in that laptop case because of the smaller PCB, 
+  there is no advantage on testing it with an Arduino MEGA 2560 in the future. I will focus on Teensy ++2.0 therefore.
+ 
 ## Details of b) can be found in folder \keyboard
 
 ![image](Keyboard/Keyboard_on_board.JPEG)
