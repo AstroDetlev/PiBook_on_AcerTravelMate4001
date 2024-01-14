@@ -36,6 +36,15 @@ b) Use the existing keyboard matrix (german layout, 89 keys, slightly curved).
   Update to b) with Version 0.1.1: The keyboard.ino code works on a Teensy ++2.0 as good as on a MEGA 2560. As the Teensy ++2.0 is the platform that will be used in that laptop case because of the smaller PCB, 
   there is no advantage on testing it with an Arduino MEGA 2560 in the future. I will focus on Teensy ++2.0 therefore.
 
+++++ Good and bad News 2024-01-14 ++++
+I have successfully assembled the keyboard matrix into the old housing and wired everthing, including the PS2-to-USB converter. 
+Works nice as a keyboard with an integrated touchpad. No problems so far.
+But then it happened...
+My solderung iron accidently turned on and while I was busy with finding a solution to extend the hight of the housing, the soldering iron melted some 
+of the key caps. This means: The Acer keyboard matrix is not usable anymore. I have some other keyboard matrix here and will continue with one of them.
+But none of them fits into the acer housing. So close and now so far...
++++++++++++++++++++++++++++++
+
 Adaption to other keyboards or other Arduinos??? 
 All the details about the keyboard are in "ACER_TRAVELMATE4001WLMI_KEYBOARD_MATRIX.h". 
 The I/O pins in use are described in PIN_ASSIGNMENTS.h.  
